@@ -22,7 +22,7 @@ _and other languages I find interesting._
 
 <p align="center" >Git, Linux, vim</p>
 
-_many more..._
+_and others._
 
 ![](https://github-readme-stats.vercel.app/api?username=censera&theme=dark&hide_border=true&include_all_commits=true&count_private=true)<br/>
 ![](https://nirzak-streak-stats.vercel.app/?user=censera&theme=dark&hide_border=true)<br/>
