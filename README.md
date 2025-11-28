@@ -1,7 +1,6 @@
 <h1 align="center" >Censera</h1>
 
-<p align="center" >I focus on low-level programming, operating systems, and tooling.
-  My goal is to understand systems deeply and produce clear, functional code (hopefully).</p>
+<p align="center" >I focus on low-level programming, operating systems, and tooling.</br>My goal is to understand systems deeply and produce clear, functional code (hopefully).</p>
 
 __Reach me using:__
 
@@ -10,8 +9,6 @@ __Reach me using:__
 - [Email](mailto:Censera@proton.me)
 
 _Or any other platforms if you found me._
-
----
 
 <h3>Tech Stack</h3>
 
