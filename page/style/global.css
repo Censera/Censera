@@ -1,0 +1,74 @@
+@font-face {
+  font-family: "Lilex";
+  src: url("../font/Lilex-regular.woff") format("truetype");
+}
+
+:root {
+  --bg: oklch(23.6% 0.0092 303);
+  --fg: oklch(97.1% 0.0064 303);
+  --accent: oklch(80.7% 0.2103 303.08);
+  --scroll: oklch(45% 0.04 303);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scrollbar-color: var(--scroll) var(--bg);
+  scrollbar-width: thin;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: "Lilex", monospace;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+main {
+  padding: 2rem;
+}
+
+a {
+    color: var(--accent);
+    text-decoration: none;
+}
+
+#link {
+    display: flex;
+    justify-content: end;
+}
+
+#name {
+  color: var(--accent);
+  font-weight: 700;
+  cursor: pointer;
+}
+
+#name:hover {
+  border-bottom: 2px dashed var(--accent);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scroll);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
