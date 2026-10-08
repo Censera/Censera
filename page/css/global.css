@@ -22,7 +22,6 @@ html {
 ::selection {
   background: var(--accent);
   color: var(--bg);
-  font-weight: bold;
 }
 
 body {
@@ -41,16 +40,18 @@ main {
 a {
     color: var(--accent);
     text-decoration: none;
+    font-weight: bold;
 }
 
 #link {
     display: flex;
-    justify-content: end;
+    align-items: center;
+    flex-direction: column;
 }
 
 #name {
   color: var(--accent);
-  font-weight:bold;
+  font-weight: bold;
   cursor: pointer;
 }
 
