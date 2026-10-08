@@ -1,0 +1,12 @@
+# Censera
+
+Personal website of Censera, a software engineering student interested
+in systems programming, game development, and low-level programming.
+
+## Pages
+
+- https://censera.space/
+
+## Projects
+
+- https://github.com/censera
