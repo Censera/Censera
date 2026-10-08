@@ -35,6 +35,8 @@ body {
 
 main {
   padding: 2rem;
+  max-width: 720px;
+  margin: 0 auto;
 }
 
 a {
