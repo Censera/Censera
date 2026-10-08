@@ -16,5 +16,3 @@ const port = "40404"
 
 const server = document.getElementById("server")
 server.textContent = `${host}:${port}`
-
-server.onclick = () => navigator.clipboard.writeText(server.textContent)
