@@ -1,8 +1,8 @@
 @font-face {
-  font-family: "Lilex";
-  src: url("../font/Lilex.woff") format("truetype");
+  font-family: 'Lilex';
+  src: url('/font/Lilex.woff2') format('woff2');
+  font-display: swap;
 }
-
 :root {
   --bg: oklch(25.1% 0.0049 39.394);
   --fg: oklch(90.0% 0.0291 91.657);

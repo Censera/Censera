@@ -1,0 +1,23 @@
+name: deploy
+on:
+  push:
+    branches: [main]
+    paths: ['src/**', 'build.sh']
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: go install github.com/tdewolff/minify/v2/cmd/minify@v2.24.13
+      - run: echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+      - run: ./build.sh
+      - name: ssh setup
+        env:
+          KEY: ${{ secrets.DEPLOY_KEY }}
+          KNOWN: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$KEY" > ~/.ssh/id_ed25519
+          printf '%s\n' "$KNOWN" > ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/id_ed25519
+      - run: rsync -rlptz --delete dist/ deploy@${{ secrets.DEPLOY_HOST }}:/var/www/censera.space/public/
