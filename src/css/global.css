@@ -40,6 +40,12 @@ main {
   margin: 0 auto;
 }
 
+#ww {
+	image-rendering: optimizespeed;
+	width: -webkit-fill-available;
+	max-width: 720px;
+}
+
 a {
     color: var(--accent);
     text-decoration: none;
