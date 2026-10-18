@@ -68,6 +68,11 @@ a {
   border-bottom: 2px dashed var(--accent);
 }
 
+#people__visit, #count__visit {
+  color: var(--accent);
+  font-weight: bold;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }
