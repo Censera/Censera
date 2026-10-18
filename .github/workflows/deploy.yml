@@ -1,17 +1,51 @@
+```yaml
 name: deploy
+
 on:
   push:
     branches: [main]
-    paths: ['src/**', 'build.sh']
+    paths:
+      - 'src/**'
+      - 'build.sh'
+      - '.github/workflows/deploy.yml'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-      - run: go install github.com/tdewolff/minify/v2/cmd/minify@v2.24.13
-      - run: echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
-      - run: ./build.sh
-      - name: ssh setup
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: 'stable'
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache Rust dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: src/backend
+
+      - name: Install minify
+        run: |
+          go install github.com/tdewolff/minify/v2/cmd/minify@v2.24.13
+          echo "$(go env GOPATH)/bin" >> "$GITHUB_PATH"
+
+      - name: Build
+        run: ./build.sh
+
+      - name: Configure SSH
         env:
           KEY: ${{ secrets.DEPLOY_KEY }}
           KNOWN: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
@@ -20,4 +54,27 @@ jobs:
           printf '%s\n' "$KEY" > ~/.ssh/id_ed25519
           printf '%s\n' "$KNOWN" > ~/.ssh/known_hosts
           chmod 600 ~/.ssh/id_ed25519
-      - run: rsync -rlptz --delete dist/ deploy@${{ secrets.DEPLOY_HOST }}:/var/www/censera.space/public/
+
+      - name: Deploy website
+        env:
+          HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          rsync -rlptz --delete --delete-excluded \
+            --exclude='/bin/' \
+            dist/ "deploy@$HOST:/var/www/censera.space/public/"
+
+      - name: Deploy backend
+        env:
+          HOST: ${{ secrets.DEPLOY_HOST }}
+        run: |
+          rsync -rlptz dist/bin/visitors \
+            "deploy@$HOST:/tmp/visitors.new"
+
+          ssh "deploy@$HOST" '
+            sudo -n install -m 755 \
+              /tmp/visitors.new \
+              /usr/local/bin/visitors &&
+            rm -f /tmp/visitors.new &&
+            sudo -n systemctl restart censeravisitors.service
+          '
+```

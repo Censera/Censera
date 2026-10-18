@@ -1,0 +1,16 @@
+[package]
+name = "visitors"
+version = "100.100.100"
+edition = "2024"
+
+[dependencies]
+axum = "0.8"
+rusqlite = { version = "0.32", features = ["bundled"] }
+serde = { version = "1", features = ["derive"] }
+tokio = { version = "1", features = [
+    "macros",
+    "rt-multi-thread",
+    "net",
+    "signal"
+] }
+uuid = { version = "1", features = ["v4"] }
