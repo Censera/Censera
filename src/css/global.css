@@ -17,6 +17,8 @@
 html {
   scrollbar-color: var(--scroll) var(--bg);
   scrollbar-width: thin;
+
+  cursor: url("/image/cursor/default.png"), auto;
 }
 
 ::selection {
@@ -24,14 +26,29 @@ html {
   color: var(--bg);
 }
 
+html {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+}
+
 body {
   margin: 0;
   background: var(--bg);
   color: var(--fg);
+  
   font-family: "Lilex", monospace;
   font-size: 1rem;
   line-height: 1.6;
   font-variant-ligatures: common-ligatures;
+}
+
+a, button {
+    cursor: url("/image/cursor/pointer.png"), pointer;
+}
+
+p, strong, h1, h2, h3, input, textarea {
+    cursor: url("/image/cursor/text.png"), text;
 }
 
 main {
@@ -61,7 +78,7 @@ a {
 #name {
   color: var(--accent);
   font-weight: bold;
-  cursor: pointer;
+  cursor: url("/image/cursor/pointer.png"), pointer;
 }
 
 #name:hover {
