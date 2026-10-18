@@ -21,6 +21,8 @@ use uuid::Uuid;
 
 const COOKIE_NAME: &str = "visitor";
 const COOKIE_MAX_AGE: u64 = 60 * 60 * 24 * 365; // 3am
+// I should changes this every time I add a page :<
+const PAGES: &[&str] = &["/", "/about", "/projects", "/minecraft", "/visitors"];
 
 struct AppState {
     db: Mutex<Connection>,
@@ -104,9 +106,9 @@ async fn record_visit(
     headers: HeaderMap,
     Json(input): Json<VisitInput>,
 ) -> Result<Response, StatusCode> {
-    if !valid_path(&input.path) {
-        return Err(StatusCode::BAD_REQUEST);
-    }
+  	let Some(path) = canonical_path(&input.path) else {
+    	return Err(StatusCode::BAD_REQUEST);
+	};
 
     let (visitor_id, new_cookie) = match read_visitor_cookie(&headers) {
         Some(id) => (id, false),
@@ -287,4 +289,11 @@ async fn shutdown_signal() {
     {
         let _ = signal::ctrl_c().await;
     }
+}
+
+fn canonical_path(path: &str) -> Option<&'static str> {
+	let path = path.strip_suffix(".html").unwrap_or(path);
+    let path = if path == "/index" { "/" } else { path };
+    let path = if path.len() > 1 { path.trim_end_matches('/') } else { path };
+    PAGES.iter().copied().find(|page| *page == path)
 }
