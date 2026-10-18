@@ -67,12 +67,6 @@ jobs:
           HOST: ${{ secrets.DEPLOY_HOST }}
         run: |
           rsync -rlptz dist/bin/visitors \
-            "deploy@$HOST:/tmp/visitors.new"
+            "deploy@$HOST:/var/www/censera.space/bin/visitors"
 
-          ssh "deploy@$HOST" '
-            sudo -n install -m 755 \
-              /tmp/visitors.new \
-              /usr/local/bin/visitors &&
-            rm -f /tmp/visitors.new &&
-            sudo -n systemctl restart censeravisitors.service
-          '
+          ssh "deploy@$HOST" 'sudo -n systemctl restart censeravisitors.service'
