@@ -6,8 +6,8 @@ const visits = document.getElementById("count__visit");
 
 if (people && visits) {
   const unavailable = () => {
-    people.textContent = ":<";
-    visits.textContent = ":<";
+    people.textContent = "-0";
+    visits.textContent = "-0";
   };
 
   if (!window.visitorStats) {
