@@ -58,9 +58,9 @@ main {
 }
 
 #ww {
-	image-rendering: optimizespeed;
-	width: -webkit-fill-available;
-	max-width: 720px;
+    image-rendering: pixelated;
+    width: 100%;
+    max-width: 720px;
 }
 
 a {
