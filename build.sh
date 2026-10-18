@@ -26,7 +26,10 @@ cp -R src/. "$work/site/"
 
 # exclude backend sourcecode from the build
 rm -rf "$work/site/backend"
+# include resources
+cp -R "$work/site/." dist/
 
+# then minify
 minify -r -o dist/ "$work/site/"
 
 find dist -type f \

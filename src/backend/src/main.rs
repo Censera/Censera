@@ -1,11 +1,11 @@
 use axum::{
+    Json, Router,
     extract::{DefaultBodyLimit, State},
-    http::{header, HeaderMap, HeaderValue, StatusCode},
+    http::{HeaderMap, HeaderValue, StatusCode, header},
     response::{IntoResponse, Response},
     routing::{get, post},
-    Json, Router,
 };
-use rusqlite::{params, Connection};
+use rusqlite::{Connection, params};
 use serde::{Deserialize, Serialize};
 use std::{
     env,
@@ -52,10 +52,8 @@ async fn main() -> Result<(), Box<dyn Error>> {
         .unwrap_or_else(|_| "127.0.0.1:8787".to_owned())
         .parse()?;
 
-    let database = PathBuf::from(
-        env::var_os("VISITORS_DB")
-            .unwrap_or_else(|| "visitors.sqlite3".into()),
-    );
+    let database =
+        PathBuf::from(env::var_os("VISITORS_DB").unwrap_or_else(|| "visitors.sqlite3".into()));
 
     if let Some(parent) = database
         .parent()
@@ -81,9 +79,7 @@ async fn main() -> Result<(), Box<dyn Error>> {
         ) WITHOUT ROWID;",
     )?;
 
-    let state = Arc::new(AppState {
-        db: Mutex::new(db),
-    });
+    let state = Arc::new(AppState { db: Mutex::new(db) });
 
     let app = Router::new()
         .route("/api/visit", post(record_visit))
@@ -106,9 +102,9 @@ async fn record_visit(
     headers: HeaderMap,
     Json(input): Json<VisitInput>,
 ) -> Result<Response, StatusCode> {
-  	let Some(path) = canonical_path(&input.path) else {
-    	return Err(StatusCode::BAD_REQUEST);
-	};
+    let Some(path) = canonical_path(&input.path) else {
+        return Err(StatusCode::BAD_REQUEST);
+    };
 
     let (visitor_id, new_cookie) = match read_visitor_cookie(&headers) {
         Some(id) => (id, false),
@@ -138,7 +134,7 @@ async fn record_visit(
              ON CONFLICT(path) DO UPDATE SET
                  views = page_views.views + 1,
                  last_seen = excluded.last_seen",
-            params![input.path, now],
+            params![path, now],
         )
         .map_err(database_error)?;
 
@@ -149,10 +145,9 @@ async fn record_visit(
 
     let mut response = (StatusCode::OK, Json(stats)).into_response();
 
-    response.headers_mut().insert(
-        header::CACHE_CONTROL,
-        HeaderValue::from_static("no-store"),
-    );
+    response
+        .headers_mut()
+        .insert(header::CACHE_CONTROL, HeaderValue::from_static("no-store"));
 
     if new_cookie {
         let value = format!(
@@ -168,9 +163,7 @@ async fn record_visit(
     Ok(response)
 }
 
-async fn read_stats(
-    State(state): State<Arc<AppState>>,
-) -> Result<Response, StatusCode> {
+async fn read_stats(State(state): State<Arc<AppState>>) -> Result<Response, StatusCode> {
     let db = state
         .db
         .lock()
@@ -179,20 +172,15 @@ async fn read_stats(
     let stats = query_stats(&db).map_err(database_error)?;
     let mut response = Json(stats).into_response();
 
-    response.headers_mut().insert(
-        header::CACHE_CONTROL,
-        HeaderValue::from_static("no-store"),
-    );
+    response
+        .headers_mut()
+        .insert(header::CACHE_CONTROL, HeaderValue::from_static("no-store"));
 
     Ok(response)
 }
 
 fn query_stats(db: &Connection) -> rusqlite::Result<Stats> {
-    let unique_visitors = db.query_row(
-        "SELECT COUNT(*) FROM visitors",
-        [],
-        |row| row.get(0),
-    )?;
+    let unique_visitors = db.query_row("SELECT COUNT(*) FROM visitors", [], |row| row.get(0))?;
 
     let total_visits = db.query_row(
         "SELECT COALESCE(SUM(views), 0) FROM page_views",
@@ -241,18 +229,7 @@ fn read_visitor_cookie(headers: &HeaderMap) -> Option<String> {
 }
 
 fn valid_visitor_id(value: &str) -> bool {
-    value.len() == 32
-        && value.bytes().all(|byte| byte.is_ascii_hexdigit())
-}
-
-fn valid_path(path: &str) -> bool {
-    !path.is_empty()
-        && path.len() <= 512
-        && path.starts_with('/')
-        && !path.starts_with("//")
-        && !path.contains('?')
-        && !path.contains('#')
-        && !path.chars().any(char::is_control)
+    value.len() == 32 && value.bytes().all(|byte| byte.is_ascii_hexdigit())
 }
 
 fn unix_time() -> Result<i64, StatusCode> {
@@ -261,8 +238,7 @@ fn unix_time() -> Result<i64, StatusCode> {
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?
         .as_secs();
 
-    i64::try_from(seconds)
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
+    i64::try_from(seconds).map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
 }
 
 fn database_error(_: rusqlite::Error) -> StatusCode {
@@ -292,8 +268,12 @@ async fn shutdown_signal() {
 }
 
 fn canonical_path(path: &str) -> Option<&'static str> {
-	let path = path.strip_suffix(".html").unwrap_or(path);
+    let path = path.strip_suffix(".html").unwrap_or(path);
     let path = if path == "/index" { "/" } else { path };
-    let path = if path.len() > 1 { path.trim_end_matches('/') } else { path };
+    let path = if path.len() > 1 {
+        path.trim_end_matches('/')
+    } else {
+        path
+    };
     PAGES.iter().copied().find(|page| *page == path)
 }
