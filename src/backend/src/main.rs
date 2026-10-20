@@ -20,8 +20,7 @@ use tokio::{net::TcpListener, signal};
 use uuid::Uuid;
 
 const COOKIE_NAME: &str = "visitor";
-const COOKIE_MAX_AGE: u64 = 60 * 60 * 24 * 365; // 3am
-// I should changes this every time I add a page :<
+const COOKIE_MAX_AGE: u64 = 60 * 60 * 24 * 365;
 const PAGES: &[&str] = &["/", "/about", "/projects", "/minecraft", "/visitors"];
 
 struct AppState {
@@ -37,13 +36,6 @@ struct VisitInput {
 struct Stats {
     unique_visitors: i64,
     total_visits: i64,
-    pages: Vec<PageStats>,
-}
-
-#[derive(Serialize)]
-struct PageStats {
-    path: String,
-    views: i64,
 }
 
 #[tokio::main]
@@ -139,12 +131,9 @@ async fn record_visit(
         .map_err(database_error)?;
 
     transaction.commit().map_err(database_error)?;
-
-    let stats = query_stats(&db).map_err(database_error)?;
     drop(db);
 
-    let mut response = (StatusCode::OK, Json(stats)).into_response();
-
+    let mut response = StatusCode::NO_CONTENT.into_response();
     response
         .headers_mut()
         .insert(header::CACHE_CONTROL, HeaderValue::from_static("no-store"));
@@ -188,29 +177,9 @@ fn query_stats(db: &Connection) -> rusqlite::Result<Stats> {
         |row| row.get(0),
     )?;
 
-    let mut statement = db.prepare(
-        "SELECT path, views
-         FROM page_views
-         ORDER BY views DESC, path ASC",
-    )?;
-
-    let rows = statement.query_map([], |row| {
-        Ok(PageStats {
-            path: row.get(0)?,
-            views: row.get(1)?,
-        })
-    })?;
-
-    let mut pages = Vec::new();
-
-    for page in rows {
-        pages.push(page?);
-    }
-
     Ok(Stats {
         unique_visitors,
         total_visits,
-        pages,
     })
 }
 
