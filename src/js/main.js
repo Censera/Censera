@@ -1,6 +1,18 @@
 // Hmm... mayn
 
-console.warn("What are you doing here ;/");
+window.visitRecorded = new Promise((resolve, reject) => {
+  const start = () => recordVisit().then(resolve, reject);
+
+  if (document.readyState === "complete") {
+    start();
+  } else {
+    window.addEventListener("load", start, { once: true });
+  }
+});
+
+window.visitRecorded.catch(error => {
+  console.warn("From visitor: unavailable stats:", error);
+});
 
 const name = document.getElementById("name");
 
@@ -28,17 +40,5 @@ function recordVisit() {
   });
 }
 
-// Keep analytics traffic out of the initial page-load path.
-window.visitRecorded = new Promise((resolve, reject) => {
-  const start = () => recordVisit().then(resolve, reject);
-
-  if (document.readyState === "complete") {
-    start();
-  } else {
-    window.addEventListener("load", start, { once: true });
-  }
-});
-
-window.visitRecorded.catch(error => {
-  console.warn("visitor: unavailable stats:", error);
-});
+console.warn("What are you doing here ;/");
+console.warn("Do not disturb me!")
