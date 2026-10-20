@@ -29,7 +29,7 @@ function recordVisit() {
 }
 
 // Keep analytics traffic out of the initial page-load path.
-window.visitorStats = new Promise((resolve, reject) => {
+window.visitRecorded = new Promise((resolve, reject) => {
   const start = () => recordVisit().then(resolve, reject);
 
   if (document.readyState === "complete") {
@@ -39,6 +39,6 @@ window.visitorStats = new Promise((resolve, reject) => {
   }
 });
 
-window.visitorStats.catch(error => {
+window.visitRecorded.catch(error => {
   console.warn("visitor: unavailable stats:", error);
 });
