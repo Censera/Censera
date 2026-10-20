@@ -10,10 +10,18 @@ if (people && visits) {
     visits.textContent = "..";
   };
 
-  if (!window.visitorStats) {
+  if (!window.visitRecorded) {
     unavailable();
   } else {
-    window.visitorStats
+    window.visitRecorded
+      .then(() => fetch("/api/visitors", { cache: "no-store" }))
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status}`);
+        }
+
+        return response.json();
+      })
       .then(stats => {
         people.textContent =
           Number(stats.unique_visitors).toLocaleString();

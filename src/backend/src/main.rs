@@ -20,8 +20,7 @@ use tokio::{net::TcpListener, signal};
 use uuid::Uuid;
 
 const COOKIE_NAME: &str = "visitor";
-const COOKIE_MAX_AGE: u64 = 60 * 60 * 24 * 365; // 3am
-// I should changes this every time I add a page :<
+const COOKIE_MAX_AGE: u64 = 60 * 60 * 24 * 365;
 const PAGES: &[&str] = &["/", "/about", "/projects", "/minecraft", "/visitors"];
 
 struct AppState {
@@ -37,13 +36,6 @@ struct VisitInput {
 struct Stats {
     unique_visitors: i64,
     total_visits: i64,
-    pages: Vec<PageStats>,
-}
-
-#[derive(Serialize)]
-struct PageStats {
-    path: String,
-    views: i64,
 }
 
 #[tokio::main]
@@ -112,39 +104,39 @@ async fn record_visit(
     };
 
     let now = unix_time()?;
-    let db = state
-        .db
-        .lock()
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    tokio::task::spawn_blocking(move || {
+        let db = state
+            .db
+            .lock()
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
-    let transaction = db.unchecked_transaction().map_err(database_error)?;
+        let transaction = db.unchecked_transaction().map_err(database_error)?;
 
-    transaction
-        .execute(
-            "INSERT OR IGNORE INTO visitors (id, first_seen)
-             VALUES (?1, ?2)",
-            params![visitor_id, now],
-        )
-        .map_err(database_error)?;
+        transaction
+            .execute(
+                "INSERT OR IGNORE INTO visitors (id, first_seen)
+                 VALUES (?1, ?2)",
+                params![visitor_id, now],
+            )
+            .map_err(database_error)?;
 
-    transaction
-        .execute(
-            "INSERT INTO page_views (path, views, last_seen)
-             VALUES (?1, 1, ?2)
-             ON CONFLICT(path) DO UPDATE SET
-                 views = page_views.views + 1,
-                 last_seen = excluded.last_seen",
-            params![path, now],
-        )
-        .map_err(database_error)?;
+        transaction
+            .execute(
+                "INSERT INTO page_views (path, views, last_seen)
+                 VALUES (?1, 1, ?2)
+                 ON CONFLICT(path) DO UPDATE SET
+                     views = page_views.views + 1,
+                     last_seen = excluded.last_seen",
+                params![path, now],
+            )
+            .map_err(database_error)?;
 
-    transaction.commit().map_err(database_error)?;
+        transaction.commit().map_err(database_error)
+    })
+    .await
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)??;
 
-    let stats = query_stats(&db).map_err(database_error)?;
-    drop(db);
-
-    let mut response = (StatusCode::OK, Json(stats)).into_response();
-
+    let mut response = StatusCode::NO_CONTENT.into_response();
     response
         .headers_mut()
         .insert(header::CACHE_CONTROL, HeaderValue::from_static("no-store"));
@@ -164,12 +156,17 @@ async fn record_visit(
 }
 
 async fn read_stats(State(state): State<Arc<AppState>>) -> Result<Response, StatusCode> {
-    let db = state
-        .db
-        .lock()
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    let stats = tokio::task::spawn_blocking(move || {
+        let db = state
+            .db
+            .lock()
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
-    let stats = query_stats(&db).map_err(database_error)?;
+        query_stats(&db).map_err(database_error)
+    })
+    .await
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)??;
+
     let mut response = Json(stats).into_response();
 
     response
@@ -188,29 +185,9 @@ fn query_stats(db: &Connection) -> rusqlite::Result<Stats> {
         |row| row.get(0),
     )?;
 
-    let mut statement = db.prepare(
-        "SELECT path, views
-         FROM page_views
-         ORDER BY views DESC, path ASC",
-    )?;
-
-    let rows = statement.query_map([], |row| {
-        Ok(PageStats {
-            path: row.get(0)?,
-            views: row.get(1)?,
-        })
-    })?;
-
-    let mut pages = Vec::new();
-
-    for page in rows {
-        pages.push(page?);
-    }
-
     Ok(Stats {
         unique_visitors,
         total_visits,
-        pages,
     })
 }
 

@@ -11,25 +11,34 @@ if (name) {
   };
 }
 
+function recordVisit() {
+  return fetch("/api/visit", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "same-origin",
+    cache: "no-store",
+    keepalive: true,
+    body: JSON.stringify({
+      path: window.location.pathname
+    })
+  }).then(response => {
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+  });
+}
 
-// Record loading this page
-window.visitorStats = fetch("/api/visit", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  credentials: "same-origin",
-  cache: "no-store",
-  keepalive: true,
-  body: JSON.stringify({
-    path: window.location.pathname
-  })
-}).then(response => {
-  if (!response.ok) {
-    throw new Error(`HTTP ${response.status}`);
+// Keep analytics traffic out of the initial page-load path.
+window.visitRecorded = new Promise((resolve, reject) => {
+  const start = () => recordVisit().then(resolve, reject);
+
+  if (document.readyState === "complete") {
+    start();
+  } else {
+    window.addEventListener("load", start, { once: true });
   }
-
-  return response.json();
 });
 
-window.visitorStats.catch(error => {
+window.visitRecorded.catch(error => {
   console.warn("visitor: unavailable stats:", error);
 });
