@@ -10,10 +10,10 @@ if (people && visits) {
     visits.textContent = "..";
   };
 
-  if (!window.visitorStats) {
+  if (!window.visitRecorded) {
     unavailable();
   } else {
-    window.visitorStats
+    window.visitRecorded
       .then(() => fetch("/api/visitors", { cache: "no-store" }))
       .then(response => {
         if (!response.ok) {
