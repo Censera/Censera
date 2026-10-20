@@ -104,34 +104,37 @@ async fn record_visit(
     };
 
     let now = unix_time()?;
-    let db = state
-        .db
-        .lock()
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    tokio::task::spawn_blocking(move || {
+        let db = state
+            .db
+            .lock()
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
-    let transaction = db.unchecked_transaction().map_err(database_error)?;
+        let transaction = db.unchecked_transaction().map_err(database_error)?;
 
-    transaction
-        .execute(
-            "INSERT OR IGNORE INTO visitors (id, first_seen)
-             VALUES (?1, ?2)",
-            params![visitor_id, now],
-        )
-        .map_err(database_error)?;
+        transaction
+            .execute(
+                "INSERT OR IGNORE INTO visitors (id, first_seen)
+                 VALUES (?1, ?2)",
+                params![visitor_id, now],
+            )
+            .map_err(database_error)?;
 
-    transaction
-        .execute(
-            "INSERT INTO page_views (path, views, last_seen)
-             VALUES (?1, 1, ?2)
-             ON CONFLICT(path) DO UPDATE SET
-                 views = page_views.views + 1,
-                 last_seen = excluded.last_seen",
-            params![path, now],
-        )
-        .map_err(database_error)?;
+        transaction
+            .execute(
+                "INSERT INTO page_views (path, views, last_seen)
+                 VALUES (?1, 1, ?2)
+                 ON CONFLICT(path) DO UPDATE SET
+                     views = page_views.views + 1,
+                     last_seen = excluded.last_seen",
+                params![path, now],
+            )
+            .map_err(database_error)?;
 
-    transaction.commit().map_err(database_error)?;
-    drop(db);
+        transaction.commit().map_err(database_error)
+    })
+    .await
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)??;
 
     let mut response = StatusCode::NO_CONTENT.into_response();
     response
@@ -153,12 +156,17 @@ async fn record_visit(
 }
 
 async fn read_stats(State(state): State<Arc<AppState>>) -> Result<Response, StatusCode> {
-    let db = state
-        .db
-        .lock()
-        .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
+    let stats = tokio::task::spawn_blocking(move || {
+        let db = state
+            .db
+            .lock()
+            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
-    let stats = query_stats(&db).map_err(database_error)?;
+        query_stats(&db).map_err(database_error)
+    })
+    .await
+    .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)??;
+
     let mut response = Json(stats).into_response();
 
     response
