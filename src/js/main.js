@@ -11,8 +11,7 @@ if (name) {
   };
 }
 
-
-// Record loading this page
+// Record this page view without fetching statistics.
 window.visitorStats = fetch("/api/visit", {
   method: "POST",
   headers: { "Content-Type": "application/json" },
@@ -26,8 +25,6 @@ window.visitorStats = fetch("/api/visit", {
   if (!response.ok) {
     throw new Error(`HTTP ${response.status}`);
   }
-
-  return response.json();
 });
 
 window.visitorStats.catch(error => {
