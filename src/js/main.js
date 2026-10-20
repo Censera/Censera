@@ -12,7 +12,7 @@ if (name) {
 }
 
 function recordVisit() {
-  window.visitorStats = fetch("/api/visit", {
+  return fetch("/api/visit", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     credentials: "same-origin",
@@ -26,11 +26,19 @@ function recordVisit() {
       throw new Error(`HTTP ${response.status}`);
     }
   });
-
-  window.visitorStats.catch(error => {
-    console.warn("visitor: unavailable stats:", error);
-  });
 }
 
 // Keep analytics traffic out of the initial page-load path.
-window.addEventListener("load", recordVisit, { once: true });
+window.visitorStats = new Promise((resolve, reject) => {
+  const start = () => recordVisit().then(resolve, reject);
+
+  if (document.readyState === "complete") {
+    start();
+  } else {
+    window.addEventListener("load", start, { once: true });
+  }
+});
+
+window.visitorStats.catch(error => {
+  console.warn("visitor: unavailable stats:", error);
+});
