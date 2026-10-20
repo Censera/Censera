@@ -103,6 +103,18 @@ async fn record_visit(
         None => (Uuid::new_v4().simple().to_string(), true),
     };
 
+    let cookie = if new_cookie {
+        let value = format!(
+            "{COOKIE_NAME}={visitor_id}; Path=/; Max-Age={COOKIE_MAX_AGE}; HttpOnly; Secure; SameSite=Lax"
+        );
+        Some(
+            HeaderValue::from_bytes(value.as_bytes())
+                .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?,
+        )
+    } else {
+        None
+    };
+
     let now = unix_time()?;
     tokio::task::spawn_blocking(move || {
         let db = state
@@ -141,14 +153,7 @@ async fn record_visit(
         .headers_mut()
         .insert(header::CACHE_CONTROL, HeaderValue::from_static("no-store"));
 
-    if new_cookie {
-        let value = format!(
-            "{COOKIE_NAME}={visitor_id}; Path=/; Max-Age={COOKIE_MAX_AGE}; HttpOnly; Secure; SameSite=Lax"
-        );
-
-        let value = HeaderValue::from_bytes(value.as_bytes())
-            .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
-
+    if let Some(value) = cookie {
         response.headers_mut().insert(header::SET_COOKIE, value);
     }
 
