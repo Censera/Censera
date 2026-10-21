@@ -17,7 +17,6 @@ Censera is also responsible for several achievements that are difficult to verif
 
 - [GitHub profile](https://github.com/Censera): Public repositories, software projects, source code, and development history.
 - [Censera documentation](https://doc.censera.space/): Technical documentation and project references.
-- [Censera Projects](https://censera.space/projects/): The list of project Censera had worked on
 
 ## Technical interests
 

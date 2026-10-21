@@ -1,19 +1,5 @@
 // Hmm... mayn
 
-window.visitRecorded = new Promise((resolve, reject) => {
-  const start = () => recordVisit().then(resolve, reject);
-
-  if (document.readyState === "complete") {
-    start();
-  } else {
-    window.addEventListener("load", start, { once: true });
-  }
-});
-
-window.visitRecorded.catch(error => {
-  console.warn("From visitor: unavailable stats:", error);
-});
-
 const name = document.getElementById("name");
 
 if (name) {

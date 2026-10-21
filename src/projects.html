@@ -3,9 +3,10 @@
 <head>
   <title>Censera's Projects</title>
 
+  <link rel="stylesheet" href="/css/projects.css">
   <link rel="stylesheet" href="/css/global.css">
-  <link rel="icon" type="image/x-icon" href="favicon.ico">
-    
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+
   <meta charset="utf-8">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,7 +16,7 @@
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="color-scheme" content="dark light">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  
+
   <meta property="og:title" content="Censera's Projects">
   <meta property="og:description" content="me create stuff">
   <meta property="og:type" content="website">
@@ -26,15 +27,69 @@
 </head>
 <body>
   <main>
+    <p>Here are the projects I have being working on or still working on.</p>
     <p>
-     Work in progress
+     [<span class="wip" title="Work In Progress">*</span>] Are underdevelopment.
     </p>
+	<div class="projects">
+	  <article class="project">
+	    <a herf="https://github.com/Censera/astry" class="name">astry<span class="wip" title="Work In Progress">*</span></a>
+	    <p class="description">Compiled programming language designed for game development.</p>
+	    <span class="language">Rust</span>
+	  </article>
+	  <article class="project">
+	    <a herf="https://github.com/Censera/ani" class="name">ani<span class="wip" title="Work In Progress">*</span></a>
+	    <p class="description">A standalone Rust library for LLVM interaction with a deliberately narrower scope than <a herf="https://github.com/TheDan64/inkwell" >Inkwell</a>.</p>
+	    <span class="language">Rust</span>
+	  </article>
+	  <article class="project">
+	    <a herf="https://github.com/Censera/fs" class="name">fs</a>
+	    <p class="description">A utility for measuring file or directory size with nice readable output.</p>
+	    <span class="language">Rust</span>
+	  </article>
+	  <article class="project">
+	    <a herf="https://github.com/Censera/palette" class="name">palette</a>
+	    <p class="description">Inspect your terminal's 16-color palette and convert colors.</p>
+	    <span class="language">Rust</span>
+	  </article>
+	  <article class="project">
+	    <a herf="https://github.com/Censera/ungit" class="name">ungit</a>
+	    <p class="description">A small workflow layer over Git for everyday work. It deliberately hides Git's staging, upstream, rebase, and branch machinery behind a few safe actions.</p>
+	    <span class="language">Rust</span>
+	  </article>
+	  <article class="project">
+	    <a herf="https://github.com/Censera/stats" class="name">stats</a>
+	    <p class="description">A command line utility to display detailed metadata and status information about files, directories, or file systems.</p>
+	    <span class="language">Rust</span>
+	  </article>
+	  <article class="project">
+	    <a herf="https://github.com/Censera/shrimp" class="name">shrimp<span class="wip" title="Work In Progress">*</span></a>
+	    <p class="description">The Shrimp shell is a shell and a command-line interpreter for shell scripts.</p>
+	    <span class="language">Rust</span>
+	  </article>
+	  <article class="project">
+	    <a herf="https://github.com/Censera/clip" class="name">clip</a>
+	    <p class="description">A light utility allows you to quickly copy file contents directly to your clipboard, as a faster alternative to manual selection.</p>
+	    <span class="language">C</span>
+	  </article>
+      <article class="project">
+	    <a herf="https://github.com/Censera/eyec" class="name">eyec</a>
+	    <p class="description">Paper plugin for offline-mode servers that separates player authentication from player trust.</p>
+	    <span class="language">Java</span>
+	  </article>
+      <article class="project">
+	    <a herf="https://github.com/Censera/tpc" class="name">tpc</a>
+	    <p class="description">Lightweight teleportation utility for Paper.</p>
+	    <span class="language">Java</span>
+	  </article>
+	</div>
+	
   </main>
 
   <p id="link">
-    <a href="/">[ <-- ]</a>
+    <a href="/">[ &lt;-- ]</a>
   </p>
-  
+
   <script src="js/main.js"></script>
 </body>
 </html>
