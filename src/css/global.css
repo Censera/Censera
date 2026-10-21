@@ -76,7 +76,7 @@ a {
     flex-direction: column;
 }
 
-#name {
+#ce {
   color: var(--accent);
   font-weight: bold;
   cursor: url("/image/cursor/pointer.png"), pointer;
