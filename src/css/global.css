@@ -3,6 +3,7 @@
   src: url('/font/Lilex.woff2') format('woff2');
   font-display: swap;
 }
+
 :root {
   --bg: oklch(25.1% 0.0049 39.394);
   --fg: oklch(90.0% 0.0291 91.657);
@@ -85,7 +86,7 @@ a {
   border-bottom: 2px dashed var(--accent);
 }
 
-#people__visit, #count__visit {
+#u, #t {
   color: var(--accent);
   font-weight: bold;
 }
