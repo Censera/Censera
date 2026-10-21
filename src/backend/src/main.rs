@@ -21,7 +21,7 @@ use uuid::Uuid;
 
 const COOKIE_NAME: &str = "visitor";
 const COOKIE_MAX_AGE: u64 = 60 * 60 * 24 * 365;
-const PAGES: &[&str] = &["/", "/about", "/projects", "/minecraft", "/visitors"];
+const PAGES: &[&str] = &["/", "/about", "/projects", "/minecraft"];
 
 struct AppState {
     db: Mutex<Connection>,

@@ -26,5 +26,9 @@ function recordVisit() {
   });
 }
 
+recordVisit().catch(error => {
+  console.warn("From visitor: unable to record visit:", error);
+});
+
 console.warn("What are you doing here ;/");
-console.warn("Do not disturb me!")
+console.warn("Do not disturb me!");
