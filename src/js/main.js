@@ -1,11 +1,11 @@
 // Hmm... mayn
 
-const name = document.getElementById("name");
+const ce = document.getElementById("ce");
 
-if (name) {
-  name.onclick = () => {
-    name.textContent =
-      name.textContent === "Censera" ? "Ashraf Lafdil" : "Censera";
+if (ce) {
+  ce.onclick = () => {
+    ce.textContent =
+      ce.textContent === "Censera" ? "Ashraf Lafdil" : "Censera";
   };
 }
 
