@@ -13,7 +13,7 @@ use uuid::Uuid;
 const COOKIE_NAME: &str = "visitor";
 const COOKIE_MAX_AGE: u64 = 60 * 60 * 24 * 365 * 1000;
 const MAX_BODY: usize = 1024;
-const PAGES: &[&str] = &["/", "/about", "/projects", "/projects/astry", "/minecraft"];
+const PAGES: &[&str] = &["/", "/about", "/projects", "/visitors", "/minecraft"];
 
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     let address = env::var("VISITORS_ADDR").unwrap_or_else(|_| "127.0.0.1:8787".to_owned());

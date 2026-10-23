@@ -67,39 +67,6 @@ main {
   margin: 0 auto;
 }
 
-code {
-  color: var(--secondary);
-}
-
-pre {
-  padding: 1rem;
-  border-radius: 4px;
-  border: 1px solid var(--dbg);
-}
-
-pre > code {
-  color: var(--fg);
-}
-
-table {
-  border-collapse: collapse;
-}
-
-table,
-th,
-td {
-  border-width: 1px;
-  padding: 0.6rem;
-}
-
-td {
-  border: 1px solid var(--dbg);
-}
-
-th {
-  background: var(--dbg);
-}
-
 #ww {
   image-rendering: pixelated;
   width: 100%;
