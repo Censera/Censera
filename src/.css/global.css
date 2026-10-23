@@ -9,7 +9,7 @@
   --dbg: oklch(31.771% 0.00802 43.178);
   --fg: oklch(90% 0.0291 91.657);
   --accent: oklch(70.4% 0.0898 55.952);
-  --secondary: oklch(62.38% 0.12171 27.99);
+  /* --secondary: oklch(62.38% 0.12171 27.99); /* unused */
   --scroll: var(--accent);
 }
 
@@ -27,6 +27,11 @@ html {
 ::selection {
   background: var(--accent);
   color: var(--bg);
+}
+
+.highlight {
+  color: var(--accent);
+  font-weight: bold;
 }
 
 html {

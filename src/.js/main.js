@@ -11,7 +11,7 @@ if (ce) {
 function recordVisit() {
   return fetch("/api/visit", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/.json" },
     credentials: "same-origin",
     cache: "no-store",
     keepalive: true,
