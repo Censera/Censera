@@ -19,3 +19,4 @@ visitors.sqlite3*
 *~
 
 *.sh
+!build.sh
