@@ -1,10 +1,9 @@
-
 "use strict";
 
-const people = document.getElementById("u");
-const visits = document.getElementById("t");
+const u = document.getElementById("u");
+const t = document.getElementById("t");
 
-if (people && visits) {
+if (u && t) {
   fetch("/api/visitors", { cache: "no-store" })
     .then(response => {
       if (!response.ok) {
@@ -22,7 +21,7 @@ if (people && visits) {
     })
     .catch(error => {
       console.warn("From visitor: unavailable stats:", error);
-      people.textContent = "..";
-      visits.textContent = "..";
+      u.textContent = "..";
+      t.textContent = "..";
     });
 }

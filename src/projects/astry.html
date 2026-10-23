@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Project</title>
+  <link rel="stylesheet" href="/css/projects.css">
+  <link rel="stylesheet" href="/css/global.css">
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <meta name="viewport" content=
+  "width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#242120">
+  <meta name="description" content=
+  "Projects related to: Systems programming, compilers, and software development">
+  <meta name="format-detection" content="telephone=no">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="color-scheme" content="dark light">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta property="og:title" content="Censera's Projects">
+  <meta property="og:description" content="me create stuff">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://censera.space/projects/project">
+  <meta property="og:image" content=
+  "https://censera.me/favicon.ico">
+  <link rel="preload" href="/font/Lilex.woff2" as="font" type=
+  "font/woff2" crossorigin="">
+</head>
+<body>
+  <main id="astry">
+    <nav aria-label="Astry">
+      <h2>Astry documentation</h2>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#quickstart">Quick start</a></li>
+        <li><a href="#language-overview">Language overview</a></li>
+        <li><a href="#syntax-reference">Syntax reference</a></li>
+        <li><a href="#compiler-architecture">Compiler architecture</a></li>
+        <li><a href="#diagnostics">Diagnostics</a></li>
+        <li><a href="#status-and-roadmap">Status and roadmap</a></li>
+        <li><a href="#contributing">Contributing</a></li>
+      </ul>
+    </nav>
+
+    <section id="home" aria-labelledby="home-title">
+      <h1 id="home-title">Astry</h1>
+      <p>Astry is a statically typed compiled language designed for game development. Its v26 design uses explicit syntax for types, pointers, casts, and logical versus bitwise operators. The compiler is written in Rust and uses <a href="https://github.com/Censera/ani"><code>ani</code></a> as its LLVM interface.</p>
+
+      <blockquote>
+        <p><strong>Implementation status:</strong> Astry's specification describes more language behavior than the current compiler implements. The CLI reaches the semantic stage and then returns <code>StageNotImplemented(Semantic)</code>. End-to-end code generation is not available yet.</p>
+      </blockquote>
+
+      <h2>Start here</h2>
+      <ul>
+        <li><a href="#quickstart">Quick start</a>: build the Rust project and understand the current CLI.</li>
+        <li><a href="#language-overview">Language overview</a>: the main concepts and a small example.</li>
+        <li><a href="#syntax-reference">Syntax reference</a>: operators, declarations, blocks, types, and grammar rules.</li>
+        <li><a href="#compiler-architecture">Compiler architecture</a>: the stages and ownership boundaries.</li>
+        <li><a href="#diagnostics">Diagnostics</a>: error stages and current output.</li>
+        <li><a href="#status-and-roadmap">Status and roadmap</a>: implemented groundwork, missing pieces, and unresolved language decisions.</li>
+        <li><a href="#contributing">Contributing</a>: how to change the implementation and keep the specification consistent.</li>
+      </ul>
+
+      <h2>Source of truth</h2>
+      <p><a href="https://github.com/Censera/astry/blob/entry/doc/syntax.md"><code>doc/syntax.md</code></a> is the source of truth for v26 spelling and grammar. It also lists open questions marked <code>Q1</code> through <code>Q20</code>; those behaviors are not settled. The other design documents explain the purpose, architecture, and planned work, but do not override the syntax specification.</p>
+
+      <h2>Project boundaries</h2>
+      <p>The intended pipeline is:</p>
+      <pre><code class="language-text">source
+    -&gt; lexer
+    -&gt; return-type normalization
+    -&gt; macro expansion
+    -&gt; declaration index
+    -&gt; parser / AST
+    -&gt; semantic analysis
+    -&gt; LLVM IR
+    -&gt; native output</code></pre>
+      <p>The early token and parser stages have implementation and tests. Semantic analysis and native output are not complete. See <a href="#status-and-roadmap">Status and roadmap</a> before relying on a feature described by the specification.</p>
+    </section>
+
+    <section id="quickstart" aria-labelledby="quickstart-title">
+      <h1 id="quickstart-title">Quick start</h1>
+      <p>This page covers the repository's current development workflow. It does not imply that Astry can already compile a complete program to native output.</p>
+
+      <h2>Requirements</h2>
+      <ul>
+        <li>Rust and Cargo with support for the crate's Rust 2024 edition.</li>
+        <li>The LLVM/toolchain setup required by <a href="https://github.com/Censera/ani"><code>ani</code></a> version 26.</li>
+        <li>Git.</li>
+      </ul>
+
+      <p>The repository's <code>.cargo/config.toml</code> sets <code>LLVM_SYS_no_polly = "1"</code> and <code>LLVM_SYS_no_ffi_libs = "1"</code>. Consult <code>ani</code> and the installed LLVM package for the remaining build requirements.</p>
+
+      <h2>Get the source</h2>
+      <pre><code class="language-console">git clone https://github.com/Censera/astry.git
+cd astry</code></pre>
+      <p>The default branch reported by the repository is <code>entry</code>.</p>
+
+      <h2>Build and test the Rust project</h2>
+      <pre><code class="language-console">cargo build
+cargo test</code></pre>
+      <p>These commands build and test the compiler implementation. They do not demonstrate end-to-end native compilation of an Astry program.</p>
+
+      <h2>Current CLI</h2>
+      <p>The current command-line entry point accepts a single source-file path:</p>
+      <pre><code class="language-console">cargo run -- path/to/main.astry
+  </code></pre>
+
+      <p>For example, the language specification uses function declarations such as:</p>
+      <pre><code class="language-rs">fn i32 add(a i32, b i32) {
+      return a + b
+  }
+
+  fn i32 main() {
+      return add(20, 22)
+  }</code></pre>
+
+      <p>At this stage, a syntactically valid program reaches the semantic stage and the compiler returns an error equivalent to:</p>
+      <pre><code class="language-text">compiler stage is not implemented: Semantic</code></pre>
+
+      <p>The CLI does not yet expose output-path, target, optimization, check-only, or IR-emission options. Those are tracked in <code>todo/entry.md</code>.</p>
+
+      <h2>Explore the code</h2>
+      <ul>
+        <li><code>src/lexer/lexer.rs</code>: source tokenization.</li>
+        <li><code>src/parser/</code>: declarations, expressions, and AST construction.</li>
+        <li><code>src/semantic/</code>: semantic-analysis data structures and type syntax.</li>
+        <li><code>src/backend/</code>: the LLVM wrapper layer.</li>
+        <li><code>src/utility/compiler.rs</code>: compiler entry points and stage orchestration.</li>
+        <li><code>doc/syntax.md</code>: authoritative language syntax.</li>
+      </ul>
+      <p>See <a href="#compiler-architecture">Compiler architecture</a> and <a href="#status-and-roadmap">Status and roadmap</a> for the current boundaries.</p>
+    </section>
+
+    <section id="language-overview" aria-labelledby="language-overview-title">
+      <h1 id="language-overview-title">Language overview</h1>
+      <p>This page summarizes the v26 language design. It is a guide to the specification, not a promise that every listed feature is implemented in the compiler.</p>
+
+      <h2>A small example</h2>
+      <pre><code class="language-rs">fn i32 clamp(value i32, low i32, high i32) {
+    if value &lt; low {
+        return low
+    } elif value &gt; high {
+        return high
+    } else {
+        return value
+    }
+}
+
+fn i32 main() {
+    let value = clamp(12, 0, 10);
+    return value
+}</code></pre>
+
+      <p>Function return types appear before the function name. Parameters use <code>name type</code>; a binding may infer its type or declare it explicitly. The semicolon on a block's final expression matters: an expression without <code>;</code> can be the block's value.</p>
+
+      <h2>Bindings</h2>
+      <p><code>let</code> declares a reassignable binding. <code>const</code> declares a binding that cannot be assigned again. A type annotation follows the name.</p>
+      <pre><code class="language-rs">let count = 0;
+let ratio f64 = 0.5;
+const LIMIT u32 = 100;
+
+count = count + 1;</code></pre>
+      <p>Shadowing is allowed: a later declaration can hide an earlier binding in its scope. It creates a new binding rather than modifying the old one.</p>
+
+      <h2>Functions and calls</h2>
+      <pre><code class="language-rs">fn i32 add(a i32, b i32) {
+    return a + b
+}
+
+let result = add(20, 22);</code></pre>
+      <p>Functions can be overloaded. The design allows overloads to differ by parameter types/count or return type; when overloads differ only by return type, the expected type must disambiguate them.</p>
+      <p>The <code>@Stripped</code> flag permits calls without parentheses, and <code>@Loosely</code> marks a parameter list containing <code>...</code>. These forms have unusual argument-boundary rules. See <code>doc/syntax.md</code> before using them.</p>
+
+      <h2>Blocks and control flow</h2>
+      <p>The specification includes <code>if</code>, <code>elif</code>, <code>else</code>, <code>loop</code>, <code>while</code>, <code>for</code>, <code>break</code>, <code>continue</code>, and <code>match</code>.</p>
+      <pre><code class="language-rs">for i in 0..10 {
+    if i == 5 { break }
+}</code></pre>
+      <p><code>..</code> is a half-open range and <code>..=</code> is a closed range. Loops may have labels; a labeled <code>break</code> or <code>continue</code> targets that loop.</p>
+
+      <p>A block can produce a value when its last item is an expression without a trailing semicolon:</p>
+      <pre><code class="language-rs">let sum = {
+    let a = 20;
+    let b = 22;
+    a + b
+}</code></pre>
+      <p>Some block and control-flow details remain open in the syntax document, including what a conditional expression without <code>else</code> yields.</p>
+
+      <h2>Types</h2>
+      <p>The v26 type list includes:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Syntax</th>
+            <th>Meaning in the specification</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><code>i8</code> through <code>i64</code></td><td>Signed integers</td></tr>
+          <tr><td><code>u8</code> through <code>u64</code></td><td>Unsigned integers</td></tr>
+          <tr><td><code>f32</code>, <code>f64</code></td><td>Floating-point values</td></tr>
+          <tr><td><code>bool</code>, <code>char</code>, <code>string</code></td><td>Boolean, character, and string values</td></tr>
+          <tr><td><code>^T</code></td><td>Non-null pointer to <code>T</code></td></tr>
+          <tr><td><code>?^T</code></td><td>Optional pointer to <code>T</code></td></tr>
+          <tr><td><code>T[n]</code></td><td>Fixed-length array</td></tr>
+          <tr><td><code>T&lt;n&gt;</code></td><td>Growable vector</td></tr>
+          <tr><td><code>(A, B)</code></td><td>Tuple</td></tr>
+          <tr><td><code>Union&lt;A, B&gt;</code></td><td>Value holding one member type</td></tr>
+          <tr><td>Named types</td><td>Structs, enums, and aliases declared by the program</td></tr>
+        </tbody>
+      </table>
+
+      <p>The default type for unsuffixed numeric literals is unresolved. Memory ownership for strings and vectors is also unresolved.</p>
+
+      <h2>Pointers and casts</h2>
+      <p>The design makes pointer operations explicit:</p>
+      <pre><code class="language-rs">let value i32 = 5;
+let pointer ^i32 = &amp;value;
+let copy i32 = pointer^;
+let widened ?^i32 = pointer;</code></pre>
+      <p><code>&amp;value</code> takes an address, postfix <code>^</code> dereferences a pointer, and <code>-&gt;</code> performs an explicit cast:</p>
+      <pre><code class="language-rs">let digit = 1 -&gt; char;</code></pre>
+      <p>The distinction between <code>^T</code> and <code>?^T</code> is checked in semantic analysis. Lifetime behavior and some optional-pointer conversions remain open questions.</p>
+
+      <h2>Operators</h2>
+      <p>Logical operators use <code>&amp;&amp;</code>, <code>||</code>, <code>~~</code>, and <code>!</code>, with keyword alternatives <code>and</code>, <code>or</code>, <code>xor</code>, and <code>not</code>. Bitwise operators use a separate family: <code>:&amp;</code>, <code>:|</code>, <code>:^</code>, <code>:&lt;</code>, <code>:&gt;</code>, and <code>&lt;:</code>. The specification rejects plain <code>&amp;</code> as a bitwise operator.</p>
+      <p>The syntax document still lists operator precedence and some increment/decrement details as open questions. Parenthesize ambiguous expressions until the rules are settled.</p>
+
+      <h2>More language constructs</h2>
+      <p>The syntax specification also describes modules and imports, structs, enums, <code>into</code> blocks, user-defined types, unions, macros, embedded C, and experimental lambdas. Several construction, dispatch, type, and lifetime rules remain unresolved. See <a href="#syntax-reference">Syntax reference</a> and the authoritative <a href="https://github.com/Censera/astry/blob/entry/doc/syntax.md"><code>doc/syntax.md</code></a>.</p>
+    </section>
+
+    <section id="syntax-reference" aria-labelledby="syntax-reference-title">
+      <h1 id="syntax-reference-title">Syntax reference</h1>
+      <p>This page collects the rules most likely to affect everyday reading. The complete and authoritative reference is <a href="https://github.com/Censera/astry/blob/entry/doc/syntax.md"><code>doc/syntax.md</code></a>, including examples, compiler notes, and open questions <code>Q1</code> through <code>Q20</code>.</p>
+
+      <h2>Tokens and terminators</h2>
+      <ul>
+        <li>Most statements end with <code>;</code>.</li>
+        <li><code>mod</code> and <code>use</code> lines do not take a semicolon.</li>
+        <li>A final expression in a block may omit <code>;</code>; that determines whether the block yields a value.</li>
+        <li><code>'x'</code> is a character literal. A form such as <code>'outer</code> is a loop label.</li>
+        <li><code>^</code> is used for pointer types and postfix dereference; <code>&amp;</code> is prefix address-of.</li>
+        <li><code>-&gt;</code> is an explicit cast.</li>
+        <li><code>..</code> and <code>..=</code> form half-open and closed ranges.</li>
+      </ul>
+      <p>The keyword set in v26 is: <code>mod use let const fn return if elif else loop while for in break continue match enum struct type into pub pri embed macro and or xor not true false None</code>.</p>
+
+      <h2>Declarations</h2>
+      <pre><code class="language-rs">mod game
+use { standard, math }
+
+let score i32 = 0
+const MAX_SCORE i32 = 100
+
+fn i32 add(a i32, b i32) {
+    return a + b
+}</code></pre>
+      <p>The type follows a binding name and a function's return type precedes its name. Explicit types are optional for bindings but are part of the function form described in the syntax specification.</p>
+      <p>Visibility markers are <code>pub</code> and <code>pri</code>. The default visibility has not been decided in the specification.</p>
+
+      <h2>Block values</h2>
+      <p>A block consists of items inside braces. A final expression without <code>;</code> becomes the block's value; ending that expression with <code>;</code> discards the value. A block with no final value is invalid in a context that requires a value.</p>
+      <pre><code class="language-rs">let value = {
+    let a = 20;
+    let b = 22;
+    a + b
+}</code></pre>
+
+      <h2>Calls and braces</h2>
+      <p>A brace after a name can mean a struct literal, a call with block arguments, or a control-flow body. The parser uses the declared kind of the name to tell them apart. A function used as a condition must be called explicitly:</p>
+      <pre><code class="language-rs">if check() { ... }</code></pre>
+      <p>The syntax document explains why <code>if check { ... }</code> is parsed differently when <code>check</code> is known to be a function. Calls using parentheses are the unambiguous form.</p>
+
+      <h2>Operators</h2>
+      <ul>
+        <li><strong>Logical:</strong> <code>&amp;&amp;</code>, <code>||</code>, <code>~~</code>, <code>!</code>; keywords <code>and</code>, <code>or</code>, <code>xor</code>, <code>not</code>.</li>
+        <li><strong>Bitwise:</strong> <code>:&amp;</code>, <code>:|</code>, <code>:^</code>, <code>:&lt;</code>, <code>:&gt;</code>, <code>&lt;:</code>.</li>
+        <li><strong>Comparison:</strong> <code>==</code>, <code>!=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>&lt;=</code>, <code>&gt;=</code>.</li>
+        <li><strong>Range:</strong> <code>..</code>, <code>..=</code>.</li>
+        <li><strong>Pointer:</strong> <code>&amp;value</code>, <code>value^</code>.</li>
+        <li><strong>Cast:</strong> <code>value -&gt; type</code>.</li>
+        <li><strong>Assignment:</strong> <code>=</code>, <code>+=</code>, <code>-=</code>, <code>*=</code>, <code>/=</code>.</li>
+      </ul>
+      <p>The design intentionally keeps logical and bitwise operators in different symbol families. Plain <code>&amp;</code> is address-of, not bitwise and. The precedence and associativity rules are not fully settled in the v26 document.</p>
+
+      <h2>Collections</h2>
+      <ul>
+        <li>Arrays use <code>T[n]</code> and array literals such as <code>[1, 2, 3]</code>.</li>
+        <li>Vectors use <code>T&lt;n&gt;</code> and vector literals such as <code>&lt;1, 2, 3&gt;</code>.</li>
+        <li>Tuples use <code>(a, b)</code> and support tuple binding forms.</li>
+        <li>Ranges can be used by <code>for</code>; range slicing is not fully specified for every collection.</li>
+      </ul>
+      <p>Vector indexing is written <code>vector&lt;index&gt;</code>, which depends on the parser knowing the name is a vector. In other contexts, <code>&lt;</code> can mean comparison. Parenthesize comparisons inside an index.</p>
+
+      <h2>Functions and flags</h2>
+      <p><code>@Stripped</code> allows a function call to omit parentheses. <code>@Loosely</code> describes functions whose parameter list contains <code>...</code>. Both forms affect how the parser determines argument boundaries. Their complete rules and limitations are in <a href="https://github.com/Censera/astry/blob/entry/doc/syntax.md"><code>doc/syntax.md</code></a>.</p>
+
+      <h2>Open questions</h2>
+      <p>Do not treat items marked <code>Qn</code> in the source specification as settled language behavior. They include default visibility, import binding, multiple-binding semantics, uninitialized values, block return rules, conditional expressions without <code>else</code>, matching and enum patterns, variadic arguments, method receivers, struct declaration equivalence, cast rules, operator precedence, macro substitution, pointer lifetimes and narrowing, heap ownership, nested unions, vector length/capacity, slicing, and numeric-literal defaults.</p>
+    </section>
+
+    <section id="compiler-architecture" aria-labelledby="compiler-architecture-title">
+      <h1 id="compiler-architecture-title">Compiler architecture</h1>
+      <p>Astry's intended compiler is a direct pipeline. Each stage should own one responsibility, expose the information required by the next stage, and avoid making later stages recover information that an earlier stage already had.</p>
+
+      <h2>Intended pipeline</h2>
+      <pre><code class="language-text">source units
+    -&gt; lexer
+    -&gt; return-type normalization
+    -&gt; macro expansion
+    -&gt; declaration index
+    -&gt; parser / AST
+    -&gt; semantic analysis
+    -&gt; backend lowering
+    -&gt; LLVM IR
+    -&gt; object or executable output</code></pre>
+      <p>The language reference describes the token-based stages before parsing so macro-produced declarations can be indexed before the parser needs to interpret name kinds. The broader design document gives the ownership boundary; the syntax document has the more detailed pipeline.</p>
+
+      <h2>Source ownership</h2>
+      <p><code>Source</code> owns a source unit's name and text. <code>Sources</code> owns the ordered set of source units and rejects duplicate names. Source order is supplied by the caller; compilation must not depend on filesystem enumeration order.</p>
+      <p>The intended ownership flow is:</p>
+      <pre><code class="language-text">Source / Sources
+    -&gt; tokens
+    -&gt; AST / Program
+    -&gt; semantic program and resolved symbols/types
+    -&gt; backend objects and LLVM context
+    -&gt; emitted output</code></pre>
+      <p>Later stages should consume structured data from earlier stages rather than rereading and reparsing source text. Source text remains available for diagnostics.</p>
+
+      <h2>Rust modules</h2>
+      <table>
+        <thead>
+          <tr><th>Path</th><th>Responsibility</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>src/entry/main.rs</code></td><td>Reads one source file, calls the compiler, prints errors, sets a non-zero exit status on failure</td></tr>
+          <tr><td><code>src/lexer/lexer.rs</code></td><td>Token types and source tokenization</td></tr>
+          <tr><td><code>src/parser/parser.rs</code></td><td>Parser implementation and AST-related syntax handling</td></tr>
+          <tr><td><code>src/parser/program.rs</code></td><td>Program-level parsing and declarations</td></tr>
+          <tr><td><code>src/parser/parser_contract.rs</code></td><td>Normalizes the function return-type spelling before parsing</td></tr>
+          <tr><td><code>src/parser/macro_expand.rs</code></td><td>Token-based macro expansion</td></tr>
+          <tr><td><code>src/semantic/</code></td><td>Semantic-program representation, type syntax, user types, source spans; full semantic checking is unfinished</td></tr>
+          <tr><td><code>src/utility/compiler.rs</code></td><td>Public compiler input types and stage orchestration</td></tr>
+          <tr><td><code>src/utility/error.rs</code></td><td>Error categories and diagnostic formatting</td></tr>
+          <tr><td><code>src/backend/</code></td><td>Wrapper types around <code>ani</code> and LLVM objects</td></tr>
+        </tbody>
+      </table>
+      <p>The repository also contains <code>src/extra/</code>, including embedded-C and pointer/cast helpers, and <code>src/backend/shortcuts.rs</code> for small backend operations.</p>
+
+      <h2>Public compiler surface</h2>
+      <p>The library exports <code>Source</code>, <code>Sources</code>, <code>Compiler</code>, <code>CompilerOptions</code>, <code>Target</code>, <code>Output</code>, <code>Error</code>, and several language representation types. A <code>Source</code> contains a name and text. <code>Sources::new</code> rejects duplicate source names. The currently defined target is <code>Target::Native</code>; output variants are <code>Output::Executable</code> and <code>Output::Object</code>.</p>
+      <p>These options are data structures, not proof that the output pipeline is implemented. <code>compile_with_options</code> validates the options and prepares each parsed semantic program, then returns <code>Error::StageNotImplemented(Stage::Semantic)</code>.</p>
+
+      <h2>Backend boundary</h2>
+      <p>The backend uses <code>ani</code> rather than exposing LLVM's full object model throughout the compiler. The current wrappers include an LLVM context, modules, functions, and instruction handlers. Tests demonstrate construction of simple <code>i32</code> and <code>void</code> functions and return instructions. Full lowering from a semantically checked Astry program to LLVM IR and native output remains unfinished.</p>
+
+      <h2>Determinism and errors</h2>
+      <p>Source units and declarations should be processed in stable order. Diagnostics and emitted symbol names should be deterministic. Errors are explicit; the design does not call for silently recovering from an unsupported target or failed stage.</p>
+    </section>
+
+    <section id="diagnostics" aria-labelledby="diagnostics-title">
+      <h1 id="diagnostics-title">Diagnostics</h1>
+      <p>Astry defines error categories for input, options, target support, lexing, parsing, semantic analysis, and backend lowering. The current formatting is implemented in <code>src/utility/error.rs</code>; the ideal format and the rendered semantic-span format are not fully aligned yet.</p>
+
+      <h2>Error categories</h2>
+      <table>
+        <thead><tr><th>Error</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><code>Io</code></td><td>Source file or another input operation failed</td></tr>
+          <tr><td><code>InvalidOptions</code></td><td>Compiler input or options are invalid</td></tr>
+          <tr><td><code>UnsupportedTarget</code></td><td>The backend does not support the requested target</td></tr>
+          <tr><td><code>Lex</code></td><td>Source text could not be tokenized</td></tr>
+          <tr><td><code>Parse</code></td><td>Tokens do not form valid syntax or structure</td></tr>
+          <tr><td><code>Semantic</code></td><td>A parsed construct violates language meaning or type rules</td></tr>
+          <tr><td><code>Backend</code></td><td>A semantic program could not be lowered to the backend</td></tr>
+          <tr><td><code>StageNotImplemented</code></td><td>Compilation reached a stage that is not implemented</td></tr>
+        </tbody>
+      </table>
+      <p>Lexer and parser diagnostics carry a line and column. Semantic diagnostics carry a <code>SourceSpan</code>. <code>with_source</code> attaches the source name to an error.</p>
+
+      <h2>Current output</h2>
+      <p>The CLI prints an error to standard error and exits with status 1. A source-wrapped lexer/parser diagnostic is currently formatted along these lines:</p>
+      <pre><code class="language-text">E [src/main.as][3][8] unexpected token</code></pre>
+
+      <p>Semantic errors use a start and end span, for example:</p>
+      <pre><code class="language-text">E [src/main.as][3:8-3:12] type mismatch</code></pre>
+      <p>The exact message depends on the error and source. This is a description of the current implementation, not a finalized user-facing diagnostic specification.</p>
+
+      <h2>Useful reports</h2>
+      <p>When reporting a compiler issue, include:</p>
+      <ol>
+        <li>The smallest source file that reproduces it.</li>
+        <li>The command used.</li>
+        <li>The full diagnostic text.</li>
+        <li>The expected behavior and the observed behavior.</li>
+        <li>The repository branch or commit used.</li>
+      </ol>
+      <p>For a lexer or parser issue, include the exact token or syntax that triggered the failure. For a semantic or backend issue, also include the relevant type declarations and surrounding function.</p>
+
+      <h2>Known gap</h2>
+      <p><code>doc/syntax.md</code> shows semantic diagnostics using <code>[Line][Column]</code>, while the current <code>Error</code> display uses a range such as <code>[start_line:start_column-end_line:end_column]</code>. <code>todo/utility.md</code> tracks this mismatch. The CLI also lacks separate exit codes for usage, source, semantic, backend, and toolchain failures.</p>
+    </section>
+
+    <section id="status-and-roadmap" aria-labelledby="status-and-roadmap-title">
+      <h1 id="status-and-roadmap-title">Status and roadmap</h1>
+      <p>Astry is under active development. Read the syntax document as the language design, not as a feature-completion matrix.</p>
+
+      <h2>Current state observed in the repository</h2>
+      <table>
+        <thead><tr><th>Area</th><th>State</th></tr></thead>
+        <tbody>
+          <tr><td>Rust crate and command-line entry point</td><td>Present; CLI accepts one source-file argument</td></tr>
+          <tr><td>Lexer</td><td>Implemented with tokenization tests; lexer TODO still lists token conformance and operator cleanup</td></tr>
+          <tr><td>Parser</td><td>Program/declaration parsing and some expression parsing exist; implementation and tests do not establish full v26 conformance</td></tr>
+          <tr><td>Macro expansion and function-return normalization</td><td>Implemented as token-stage helpers used before program parsing</td></tr>
+          <tr><td>Semantic analysis</td><td>Data structures and type-syntax groundwork exist; the complete validation and resolution stage is unfinished</td></tr>
+          <tr><td>LLVM wrappers</td><td>Basic context/module/function/handler wrappers exist; unit tests cover small IR operations</td></tr>
+          <tr><td>Astry-to-LLVM lowering</td><td>Not complete end to end</td></tr>
+          <tr><td>Object/executable output</td><td>Not available through the current compile path</td></tr>
+          <tr><td>CLI options and polished diagnostics</td><td>Incomplete</td></tr>
+          <tr><td>README and user documentation</td><td>Now being established by these wiki pages; source specification remains in <code>doc/syntax.md</code></td></tr>
+        </tbody>
+      </table>
+
+      <p>The strongest current limitation is explicit in <code>Compiler::compile_with_options</code>: after preparing the semantic program for each source, it returns <code>StageNotImplemented(Stage::Semantic)</code>. A valid program therefore cannot currently pass through the CLI to produce native output.</p>
+
+      <h2>Implementation order</h2>
+      <p>The plan in <code>doc/plan.md</code> organizes the work roughly as follows:</p>
+      <ol>
+        <li>Establish compiler input ownership, error handling, and a small public API.</li>
+        <li>Finish lexer conformance to the v26 token rules.</li>
+        <li>Complete the parser and AST for the stable language surface.</li>
+        <li>Implement semantic analysis: name resolution, scopes, visibility, types, overloads, casts, pointers, and control-flow rules.</li>
+        <li>Finalize the <code>ani</code> boundary and backend representations.</li>
+        <li>Lower checked programs into LLVM IR.</li>
+        <li>Implement runtime and standard-library operations.</li>
+        <li>Emit object files and executables for supported native targets.</li>
+        <li>Revisit experimental features after the core language works.</li>
+      </ol>
+
+      <h2>Unresolved specification questions</h2>
+      <p><code>doc/syntax.md</code> marks unresolved behavior from <code>Q1</code> through <code>Q20</code>. The major groups are:</p>
+      <ul>
+        <li><strong>Declarations and modules:</strong> default visibility, nested import binding, multiple-name binding semantics, and uninitialized storage.</li>
+        <li><strong>Blocks and control flow:</strong> final-expression return behavior, conditionals without <code>else</code>, match wildcard/exhaustiveness, and enum patterns.</li>
+        <li><strong>Calls and methods:</strong> variadic argument typing/boundaries and how <code>into</code> methods receive their receiver.</li>
+        <li><strong>Types and casts:</strong> equivalence of struct declaration forms, valid cast pairs, operator precedence/associativity, and numeric-literal default types.</li>
+        <li><strong>Macros:</strong> whether substituted arguments are parenthesized and how body braces participate in expansion.</li>
+        <li><strong>Pointers and memory:</strong> optional-pointer narrowing, lifetimes of addresses to locals, who frees vector and string storage, and nested union behavior.</li>
+        <li><strong>Collections:</strong> vector length versus capacity for uninitialized forms, vector method return types, and range slicing results.</li>
+      </ul>
+      <p>Do not silently invent answers to these questions in code or documentation. Record a decision in <code>doc/syntax.md</code> when the language design resolves one.</p>
+
+      <h2>Cross-document inconsistencies</h2>
+      <p>The repository contains a few design/status mismatches that should be resolved as implementation proceeds:</p>
+      <ul>
+        <li><code>doc/design.md</code> and <code>doc/plan.md</code> put modules and macros among experimental features, while <code>doc/syntax.md</code> describes module/import handling and macro expansion in its main pipeline.</li>
+        <li><code>doc/goal.md</code> links to <code>syntaxdesign-26.8.md</code>, but the tracked syntax file is <code>doc/syntax.md</code>.</li>
+        <li>The syntax document's example diagnostic format differs from the current <code>Error</code> display for semantic spans.</li>
+        <li>The lexer and semantic TODOs identify operator/type-token mismatches that need conformance checks.</li>
+        <li><code>src/semantic/semantic.rs</code> currently spells the internal flag variants <code>Striped</code> and <code>Lossely</code>, while the syntax uses <code>@Stripped</code> and <code>@Loosely</code>; reconcile these names when flag handling is implemented.</li>
+      </ul>
+      <p>The syntax document should remain authoritative for spelling and grammar. Other documents should be updated when a decision changes.</p>
+    </section>
+
+    <section id="contributing" aria-labelledby="contributing-title">
+      <h1 id="contributing-title">Contributing</h1>
+      <p>Keep changes narrow and keep the implementation, specification, tests, and documentation in agreement.</p>
+
+      <h2>Before changing syntax</h2>
+      <ol>
+        <li>Read the relevant section in <a href="https://github.com/Censera/astry/blob/entry/doc/syntax.md"><code>doc/syntax.md</code></a>.</li>
+        <li>Check whether the behavior is stable or marked with an open question (<code>Q1</code> through <code>Q20</code>).</li>
+        <li>If the rule is unresolved, decide and document the rule before depending on it in multiple compiler stages.</li>
+        <li>Add or update tests for accepted syntax, rejected syntax, and source locations where relevant.</li>
+        <li>Update the lexer/parser/semantic TODO when the implementation status changes.</li>
+      </ol>
+
+      <h2>Stage boundaries</h2>
+      <p>The compiler is intended to pass structured information forward:</p>
+      <ul>
+        <li>The lexer owns tokenization and lexical diagnostics.</li>
+        <li>The parser owns syntactic structure and produces the AST.</li>
+        <li>Semantic analysis resolves names and types and validates language rules.</li>
+        <li>The backend lowers a checked semantic program to LLVM IR.</li>
+        <li>Output handling emits the requested artifact.</li>
+      </ul>
+      <p>Do not compensate for a missing invariant in a later stage by reparsing source text or silently recovering from an earlier-stage failure.</p>
+
+      <h2>Development commands</h2>
+      <pre><code class="language-console">cargo build
+cargo test</code></pre>
+      <p>Build requirements include the LLVM/toolchain setup required by <code>ani</code>. A passing unit-test suite is not currently the same as a passing end-to-end compilation test: the compile entry point intentionally stops at the semantic stage while that stage remains unimplemented.</p>
+
+      <h2>Tests to add</h2>
+      <p>For lexer changes, test tokens and malformed inputs. For parser changes, test both AST shape and rejection cases. For semantic changes, test name resolution, types, overload selection, visibility, and deterministic source spans. For backend changes, verify generated LLVM IR and add end-to-end tests once the frontend-to-backend path exists.</p>
+
+      <h2>Documentation style</h2>
+      <ul>
+        <li>Use plain, exact language.</li>
+        <li>Describe actual behavior, not intended behavior, as current behavior.</li>
+        <li>Keep examples small and runnable when the toolchain supports them.</li>
+        <li>State preconditions, failures, and unresolved behavior explicitly.</li>
+        <li>Prefer one sentence per source line in documentation files.</li>
+        <li>Link to the source specification instead of copying the entire grammar into several places.</li>
+        <li>Avoid introducing architectural layers for features the language does not yet require.</li>
+      </ul>
+
+      <h2>Pull requests</h2>
+      <p>Keep each change focused. Explain the behavior changed, the tests run, and any known limitations. If a language rule changes, update the syntax reference and related examples in the same change.</p>
+    </section>
+  </main>
+  <p id="link"><a href="/projects">[ &lt;-- ]</a></p>
+  <script src="/js/main.js"></script>
+</body>
+</html>

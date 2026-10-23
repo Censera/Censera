@@ -1,5 +1,4 @@
 // Hmm... mayn
-
 const ce = document.getElementById("ce");
 
 if (ce) {
