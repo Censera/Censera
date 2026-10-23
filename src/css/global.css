@@ -82,7 +82,7 @@ pre > code {
 }
 
 table {
-    border-collapse: collapse;
+  border-collapse: collapse;
 }
 
 table,
@@ -97,7 +97,7 @@ td {
 }
 
 th {
-    background: var(--dbg);
+  background: var(--dbg);
 }
 
 #ww {

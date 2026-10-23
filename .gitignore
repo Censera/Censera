@@ -17,3 +17,5 @@ visitors.sqlite3*
 *.swp
 *.swo
 *~
+
+*.sh

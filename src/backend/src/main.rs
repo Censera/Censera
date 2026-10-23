@@ -11,17 +11,15 @@ use tiny_http::{Header, Method, Request, Response, ResponseBox, Server, StatusCo
 use uuid::Uuid;
 
 const COOKIE_NAME: &str = "visitor";
-const COOKIE_MAX_AGE: u64 = 60 * 60 * 24 * 365;
+const COOKIE_MAX_AGE: u64 = 60 * 60 * 24 * 365 * 1000;
 const MAX_BODY: usize = 1024;
-const PAGES: &[&str] = &["/", "/about", "/projects", "/minecraft"];
+const PAGES: &[&str] = &["/", "/about", "/projects", "/projects/astry", "/minecraft"];
 
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
-    let address =
-        env::var("VISITORS_ADDR").unwrap_or_else(|_| "127.0.0.1:8787".to_owned());
+    let address = env::var("VISITORS_ADDR").unwrap_or_else(|_| "127.0.0.1:8787".to_owned());
 
-    let database = PathBuf::from(
-        env::var_os("VISITORS_DB").unwrap_or_else(|| "visitors.sqlite3".into()),
-    );
+    let database =
+        PathBuf::from(env::var_os("VISITORS_DB").unwrap_or_else(|| "visitors.sqlite3".into()));
 
     if let Some(parent) = database
         .parent()
@@ -59,12 +57,7 @@ fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
 
 fn handle(mut request: Request, db: &mut Connection) {
     let method = request.method().clone();
-    let path = request
-        .url()
-        .split('?')
-        .next()
-        .unwrap_or("/")
-        .to_owned();
+    let path = request.url().split('?').next().unwrap_or("/").to_owned();
 
     let response = match (method, path.as_str()) {
         (Method::Post, "/api/visit") => record_visit(&mut request, db),
@@ -83,9 +76,7 @@ fn handle(mut request: Request, db: &mut Connection) {
             }
         },
 
-        (_, route) if route == "/api/visit" || route == "/api/visitors" => {
-            empty_response(405)
-        }
+        (_, route) if route == "/api/visit" || route == "/api/visitors" => empty_response(405),
 
         _ => empty_response(404),
     };
@@ -122,11 +113,10 @@ fn record_visit(request: &mut Request, db: &mut Connection) -> ResponseBox {
         return empty_response(413);
     }
 
-    let input: serde_json::Value =
-        match serde_json::from_slice(&body) {
-            Ok(input) => input,
-            Err(_) => return empty_response(400),
-        };
+    let input: serde_json::Value = match serde_json::from_slice(&body) {
+        Ok(input) => input,
+        Err(_) => return empty_response(400),
+    };
 
     let Some(path) = input
         .get("path")
@@ -139,8 +129,7 @@ fn record_visit(request: &mut Request, db: &mut Connection) -> ResponseBox {
     let existing_id = read_visitor_cookie(request.headers());
     let new_cookie = existing_id.is_none();
 
-    let visitor_id =
-        existing_id.unwrap_or_else(|| Uuid::new_v4().simple().to_string());
+    let visitor_id = existing_id.unwrap_or_else(|| Uuid::new_v4().simple().to_string());
 
     let Some(now) = unix_time() else {
         return empty_response(500);
@@ -151,8 +140,8 @@ fn record_visit(request: &mut Request, db: &mut Connection) -> ResponseBox {
         return empty_response(500);
     }
 
-    let mut response = Response::empty(StatusCode(204))
-        .with_header(header(b"Cache-Control", b"no-store"));
+    let mut response =
+        Response::empty(StatusCode(204)).with_header(header(b"Cache-Control", b"no-store"));
 
     if new_cookie {
         let cookie = format!(
@@ -160,10 +149,7 @@ fn record_visit(request: &mut Request, db: &mut Connection) -> ResponseBox {
              Max-Age={COOKIE_MAX_AGE}; HttpOnly; Secure; SameSite=Lax"
         );
 
-        response = response.with_header(header(
-            b"Set-Cookie",
-            cookie.as_bytes(),
-        ));
+        response = response.with_header(header(b"Set-Cookie", cookie.as_bytes()));
     }
 
     response.boxed()
@@ -238,10 +224,7 @@ fn has_json_content_type(headers: &[Header]) -> bool {
 }
 
 fn unix_time() -> Option<i64> {
-    let seconds = SystemTime::now()
-        .duration_since(UNIX_EPOCH)
-        .ok()?
-        .as_secs();
+    let seconds = SystemTime::now().duration_since(UNIX_EPOCH).ok()?.as_secs();
 
     i64::try_from(seconds).ok()
 }
@@ -261,10 +244,7 @@ fn canonical_path(path: &str) -> Option<&'static str> {
 fn json_response(body: String) -> ResponseBox {
     Response::from_string(body)
         .with_status_code(StatusCode(200))
-        .with_header(header(
-            b"Content-Type",
-            b"application/json; charset=utf-8",
-        ))
+        .with_header(header(b"Content-Type", b"application/json; charset=utf-8"))
         .with_header(header(b"Cache-Control", b"no-store"))
         .boxed()
 }
