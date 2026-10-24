@@ -13,14 +13,14 @@ if (u && t) {
       return response.json();
     })
     .then(stats => {
-      people.textContent =
-        Number(stats.unique_visitors).toLocaleString();
+      u.textContent =
+        Number(stats.uniques).toLocaleString();
 
-      visits.textContent =
-        Number(stats.total_visits).toLocaleString();
+      t.textContent =
+        Number(stats.total).toLocaleString();
     })
     .catch(error => {
-      console.warn("From visitor: unavailable stats:", error);
+      console.warn("Visitor:", error);
       u.textContent = "..";
       t.textContent = "..";
     });

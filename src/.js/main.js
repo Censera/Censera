@@ -11,7 +11,7 @@ if (ce) {
 function recordVisit() {
   return fetch("/api/visit", {
     method: "POST",
-    headers: { "Content-Type": "application/.json" },
+    headers: { "Content-Type": "application/json" },
     credentials: "same-origin",
     cache: "no-store",
     keepalive: true,
@@ -26,8 +26,8 @@ function recordVisit() {
 }
 
 recordVisit().catch(error => {
-  console.warn("From visitor: unable to record visit:", error);
+  console.warn("Vistor:", error);
 });
 
-console.warn("What are you doing here ;/");
-console.warn("Do not disturb me!");
+console.warn("What are you doing here? >:[");
+console.warn("DO NOT DISTURB ME!");

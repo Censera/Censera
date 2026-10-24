@@ -63,9 +63,9 @@ fn handle(mut request: Request, db: &mut Connection) {
         (Method::Post, "/api/visit") => record_visit(&mut request, db),
 
         (Method::Get, "/api/visitors") => match query_stats(db) {
-            Ok((unique_visitors, total_visits)) => {
+            Ok((uniques, total)) => {
                 let body = format!(
-                    r#"{{"unique_visitors":{unique_visitors},"total_visits":{total_visits}}}"#
+                    r#"{{"uniques":{uniques},"total":{total}}}"#
                 );
 
                 json_response(body)
@@ -182,16 +182,16 @@ fn write_visit(
 }
 
 fn query_stats(db: &Connection) -> rusqlite::Result<(i64, i64)> {
-    let unique_visitors: i64 =
+    let uniques: i64 =
         db.query_row("SELECT COUNT(*) FROM visitors", [], |row| row.get(0))?;
 
-    let total_visits: i64 = db.query_row(
+    let total: i64 = db.query_row(
         "SELECT COALESCE(SUM(views), 0) FROM page_views",
         [],
         |row| row.get(0),
     )?;
 
-    Ok((unique_visitors, total_visits))
+    Ok((uniques, total))
 }
 
 fn read_visitor_cookie(headers: &[Header]) -> Option<String> {
