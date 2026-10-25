@@ -9,7 +9,6 @@ if (u && t) {
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
       }
-
       return response.json();
     })
     .then(stats => {

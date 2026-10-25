@@ -1,11 +1,28 @@
 // Hmm... mayn
+const u = "Censera";
 const ce = document.getElementById("ce");
-
 if (ce) {
   ce.onclick = () => {
     ce.textContent =
-      ce.textContent === "Censera" ? "Ashraf Lafdil" : "Censera";
+      ce.textContent === u ? "Ashraf Lafdil" : u;
   };
+}
+
+let di = document.getElementById("di");
+if (di) {
+  const id = "1266574427274084413";
+  di.href = `https://discord.com/users/${id}`
+}
+
+let gi = document.getElementById("gi");
+if (gi) {
+  gi.href = `https://github.com/${u}`
+}
+
+let em = document.getElementById("em");
+if (em) {
+  const dm = "proton.me";
+  em.href = `mailto:${u}@${dm}`
 }
 
 function recordVisit() {
