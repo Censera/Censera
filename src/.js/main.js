@@ -1,10 +1,11 @@
 // Hmm... mayn
-const u = "Censera";
+const me = "Censera";
+const al = "Ashraf Lafdil";
 const ce = document.getElementById("ce");
 if (ce) {
   ce.onclick = () => {
     ce.textContent =
-      ce.textContent === u ? "Ashraf Lafdil" : u;
+      ce.textContent === me?al:me;
   };
 }
 
@@ -16,13 +17,13 @@ if (di) {
 
 let gi = document.getElementById("gi");
 if (gi) {
-  gi.href = `https://github.com/${u}`
+  gi.href = `https://github.com/${me}`
 }
 
 let em = document.getElementById("em");
 if (em) {
   const dm = "proton.me";
-  em.href = `mailto:${u}@${dm}`
+  em.href = `mailto:${me}@${dm}`
 }
 
 function recordVisit() {
@@ -46,5 +47,5 @@ recordVisit().catch(error => {
   console.warn("Vistor:", error);
 });
 
-console.warn("What are you doing here? >:[");
 console.warn("DO NOT DISTURB ME!");
+console.error("What are you doing here? >:[");
