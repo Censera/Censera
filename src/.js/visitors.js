@@ -20,7 +20,7 @@ if (u && t) {
     })
     .catch(error => {
       console.warn("Visitor:", error);
-      u.textContent = "..";
-      t.textContent = "..";
+      u.textContent = "-1";
+      t.textContent = "-1";
     });
 }

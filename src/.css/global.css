@@ -1,16 +1,16 @@
 @font-face {
   font-family: "Lilex";
-  src: url("/font/Lilex.woff2") format("woff2");
+  src: url("/.font/Lilex.woff2") format("woff2");
   font-display: swap;
 }
 
 :root {
   --bg: oklch(25.1% 0.0049 39.394);
-  --dbg: oklch(31.771% 0.00802 43.178);
   --fg: oklch(90% 0.0291 91.657);
   --accent: oklch(70.4% 0.0898 55.952);
-  /* --secondary: oklch(62.38% 0.12171 27.99); /* unused */
   --scroll: var(--accent);
+  /* --dbg: oklch(31.771% 0.00802 43.178);     /* unused */
+  /* --secondary: oklch(62.38% 0.12171 27.99); /* unused */
 }
 
 * {
@@ -27,6 +27,11 @@ html {
 ::selection {
   background: var(--accent);
   color: var(--bg);
+}
+
+li::marker {
+  content: "— ";
+  color: var(--accent);
 }
 
 .highlight {
@@ -53,17 +58,16 @@ body {
 
 a,
 button {
-  cursor: url("/image/cursor/pointer.png"), pointer;
+  cursor: url("/.img/cursor/pointer.png"), pointer;
 }
 
 p,
-strong,
 h1,
 h2,
 h3,
 input,
 textarea {
-  cursor: url("/image/cursor/text.png"), text;
+  cursor: url("/.img/cursor/text.png"), text;
 }
 
 main {
@@ -93,11 +97,15 @@ a {
 #ce {
   color: var(--accent);
   font-weight: bold;
-  cursor: url("/image/cursor/pointer.png"), pointer;
+  cursor: url("/.img/cursor/pointer.png"), pointer;
 }
 
-#name:hover {
-  border-bottom: 2px dashed var(--accent);
+#ce:hover::before {
+  content: ">>-";
+}
+
+#ce:hover::after {
+  content: "-->";
 }
 
 #u,

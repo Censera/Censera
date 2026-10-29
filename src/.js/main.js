@@ -1,6 +1,6 @@
 // Hmm... mayn
 const me = "Censera";
-const al = "Ashraf Lafdil";
+const al = "Ashraf";
 const ce = document.getElementById("ce");
 if (ce) {
   ce.onclick = () => {
