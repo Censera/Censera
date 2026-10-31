@@ -28,7 +28,7 @@ cp -R src/. "$work/site/"
 rm -rf "$work/site/backend"
 
 # minify and copy resources
-minify -r -o dist/ "$work/site/"
+minify -r -a -s -o dist/ "$work/site/"
 
 find dist -type f \
     \( -name '*.html' -o -name '*.css' -o -name '*.js' \
