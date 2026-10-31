@@ -21,7 +21,7 @@ html {
   scrollbar-color: var(--scroll) var(--bg);
   scrollbar-width: thin;
 
-  cursor: url("/image/cursor/default.png"), auto;
+  cursor: url("/.img/cursor/default.png"), auto;
 }
 
 ::selection {
