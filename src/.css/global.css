@@ -1,6 +1,8 @@
 @font-face {
   font-family: "Lilex";
   src: url("/.font/Lilex.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
   font-display: swap;
 }
 
@@ -36,7 +38,6 @@ li::marker {
 
 .highlight {
   color: var(--accent);
-  font-weight: bold;
 }
 
 html {
@@ -53,7 +54,8 @@ body {
   font-family: "Lilex", monospace;
   font-size: 1rem;
   line-height: 1.6;
-  font-variant-ligatures: common-ligatures;
+  font-variant-ligatures: contextual common-ligatures;
+  font-feature-settings: "calt" 1;
 }
 
 a,
@@ -85,7 +87,6 @@ main {
 a {
   color: var(--accent);
   text-decoration: none;
-  font-weight: bold;
 }
 
 #link {
@@ -96,7 +97,6 @@ a {
 
 #ce {
   color: var(--accent);
-  font-weight: bold;
   cursor: url("/.img/cursor/pointer.png"), pointer;
 }
 
@@ -111,7 +111,6 @@ a {
 #u,
 #t {
   color: var(--accent);
-  font-weight: bold;
 }
 
 ::-webkit-scrollbar {
