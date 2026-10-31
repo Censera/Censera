@@ -26,15 +26,14 @@ cp -R src/. "$work/site/"
 
 # exclude backend sourcecode from the build
 rm -rf "$work/site/backend"
-# include resources
-cp -R "$work/site/." dist/
 
-# then minify
+# minify and copy resources
 minify -r -o dist/ "$work/site/"
 
 find dist -type f \
     \( -name '*.html' -o -name '*.css' -o -name '*.js' \
-       -o -name '*.txt' -o -name '*.xml' \) \
+       -o -name '*.txt' -o -name '*.xml' \
+    \) \
     -exec gzip -9 -k -f {} +
 
 cargo build --release \
