@@ -30,7 +30,7 @@ html {
 }
 
 li::marker {
-  content: "— ";
+  content: "\002014\000020";
   color: var(--accent);
 }
 
@@ -101,11 +101,11 @@ a {
 }
 
 #ce:hover::before {
-  content: ">>-";
+  content: "\3E\3E\2010";
 }
 
 #ce:hover::after {
-  content: "-->";
+  content: "\2010\2010\3E";
 }
 
 #u,
