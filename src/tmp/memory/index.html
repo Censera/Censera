@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Tile memory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap">
+<style>
+:root{--zoom:1.5;--bg:#fff;--ink:#4b4b4b;--muted:#777;--tile:#e5e5e5;--tile-d:#cfcfcf;--blue:#1cb0f6;--blue-d:#1899d6;--black:#000;--bad:#ea2b2b;--green:#58cc02;--green-d:#58a700;color-scheme:light;
+  box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*::before,*::after{box-sizing:inherit}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font:600 1rem/1.5 Nunito,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;display:grid;place-items:center}
+main{width:min(94vw,calc(28rem * var(--zoom)));display:grid;gap:1.1rem;padding:1rem 0}
+h1{font-size:1.6rem;font-weight:800;margin:0}
+.stats{display:flex;justify-content:center;gap:1.4rem;flex-wrap:wrap;color:var(--muted);font-size:.9rem;font-variant-numeric:tabular-nums}
+.stats b{color:var(--ink);font-weight:800}
+.stats>span{display:inline-flex;align-items:center;gap:.4rem}
+.ic{width:1.3rem;height:1.3rem;fill:currentColor;flex:none}
+#board{display:grid;gap:.4rem}
+.tile{border:0;padding:0;background:var(--tile);box-shadow:0 3px 0 var(--tile-d);border-radius:.5rem;aspect-ratio:2/1;cursor:pointer;min-width:0;min-height:0}
+.tile:focus-visible{outline:3px solid var(--ink);outline-offset:1px}
+.tile.on{background:var(--blue);box-shadow:0 3px 0 var(--blue-d)}
+.tile.miss{background:var(--black);box-shadow:0 3px 0 #000}
+.tile.reveal{box-shadow:inset 0 0 0 3px var(--blue)}
+#status{min-height:1.5em;margin:0;text-align:center}
+#status.bad{color:var(--bad)}
+button.ctl{font:inherit;font-weight:800;padding:.7rem 1.6rem;border-radius:14px;border:0;background:var(--green);color:#fff;box-shadow:0 4px 0 var(--green-d);cursor:pointer}
+.top{display:flex;justify-content:space-between;align-items:center}
+.restart{font:inherit;font-weight:800;display:inline-flex;align-items:center;gap:.4rem;padding:.4rem;line-height:0;border-radius:10px;border:2px solid var(--tile);background:#fff;color:var(--muted);cursor:pointer}
+.restart .lbl{display:none}
+.restart.alert{padding:.4rem 1rem .4rem .7rem;line-height:1.2;background:var(--green);border-color:var(--green);color:#fff;box-shadow:0 3px 0 var(--green-d)}
+.restart.alert .lbl{display:inline}
+.restart:disabled{opacity:.4;cursor:default}
+.restart:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.stage{position:relative}
+#lock{position:absolute;inset:0;display:grid;place-items:center;background:rgba(255,255,255,.65);backdrop-filter:blur(3px)}
+#lock[hidden]{display:none}
+.stats>span.bad,.stats>span.bad b{color:var(--bad)}
+button.ctl:active{transform:translateY(3px);box-shadow:0 1px 0 var(--green-d)}
+button.ctl:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+</style>
+</head>
+<body>
+<main>
+  <header class="top"><h1>Tile memory</h1><button class="restart" id="restart" disabled aria-label="Restart" title="Restart"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><g transform="scale(.08)"><path d="M287 150Q282 150 278.5 153Q275 156 275 161Q272 195 252.5 222Q233 249 203 263.5Q173 278 139 275Q105 272 78 253Q51 234 36.5 204Q22 174 25 140Q28 106 47 78.5Q66 51 96 37Q126 23 160 25Q183 27 203 36.5Q223 46 239 62H200Q195 62 191.5 66Q188 70 188 75Q188 80 191.5 83.5Q195 87 200 87H252Q262 87 268.5 80.5Q275 74 275 64V12Q275 7 271.5 3.5Q268 0 262.5 0Q257 0 253.5 3.5Q250 7 250 12V38Q220 11 181 3.5Q142 -4 104 8Q66 20 38.5 50.5Q11 81 3.5 120Q-4 159 8 197Q20 235 50.5 262Q81 289 120 297Q159 305 197 292.5Q235 280 262 250Q278 232 287.5 210Q297 188 299 164Q300 159 296.5 155Q293 151 288 150Z"/></g></svg><span class="lbl">Restart</span></button></header>
+  <div class="stats" aria-label="Progress">
+    <span title="Level" aria-label="Level"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><g transform="scale(.08)"><path d="M285 57Q278 54 270.5 55.5Q263 57 257 62L225 95L168 37Q160 30 150 30Q140 30 132 37L75 95L43 62Q37 57 29.5 55.5Q22 54 15 57Q8 60 4 66.5Q0 73 0 80V212Q0 229 8.5 243.5Q17 258 31.5 266.5Q46 275 63 275H238Q254 275 268.5 266.5Q283 258 291.5 243.5Q300 229 300 213V80Q300 73 296 66.5Q292 60 285 57Z"/></g></svg><span><b id="sLvl">1</b>/<span id="sMax"></span></span></span>
+    <span title="Found" aria-label="Found"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><g transform="scale(.08)"><path d="M300 150Q300 191 280 225.5Q260 260 225.5 280Q191 300 150 300Q109 300 74.5 280Q40 260 20 225.5Q0 191 0 150Q0 109 20 74.5Q40 40 74.5 20Q109 0 150 0Q164 0 177 2Q182 3 185 7.5Q188 12 187 17Q186 22 182 25Q178 28 173 27Q162 25 150 25Q116 25 87.5 42Q59 59 42 87.5Q25 116 25 150Q25 184 42 212.5Q59 241 87.5 258Q116 275 150 275Q184 275 212.5 258Q241 241 258 212.5Q275 184 275 150Q275 139 273 127Q272 122 275 118Q278 114 283 113Q288 112 292.5 115Q297 118 298 123Q300 136 300 150ZM161 76Q166 76 170 73Q174 70 175 65Q176 60 172.5 56Q169 52 164 51Q157 50 150 50Q123 50 100 63.5Q77 77 63.5 100Q50 123 50 150Q50 177 63.5 200Q77 223 100 236.5Q123 250 150 250Q177 250 200 236.5Q223 223 236.5 200Q250 177 250 150Q250 143 249 136Q248 131 244 127.5Q240 124 235 125Q230 126 227 130Q224 134 224.5 139Q225 144 225 150Q225 170 215 187.5Q205 205 187.5 215Q170 225 150 225Q130 225 112.5 215Q95 205 85 187.5Q75 170 75 150Q75 130 85 112.5Q95 95 112.5 85Q130 75 150 75Q156 75 161 76ZM134 114Q131 110 126 109.5Q121 109 117 113Q109 120 104.5 129.5Q100 139 100 150Q100 171 114.5 185.5Q129 200 150 200Q161 200 170.5 195.5Q180 191 187 183Q191 180 190.5 174.5Q190 169 186.5 165.5Q183 162 177.5 162.5Q172 163 169 167Q161 175 150.5 175Q140 175 132.5 167.5Q125 160 125 149.5Q125 139 134 131Q137 128 137.5 123Q138 118 135 114ZM154 129Q150 132 150 137.5Q150 143 153.5 146.5Q157 150 162.5 150Q168 150 172 146L230 87H263Q268 87 272 84L297 59Q299 56 300 52.5Q301 49 299.5 45.5Q298 42 295 39.5Q292 37 288 37H263V12Q263 9 261 5.5Q259 2 255.5 1Q252 0 248 0.5Q244 1 242 4L217 29Q213 32 213 38V70Z"/></g></svg><span><b id="sFound">0</b>/<b id="sTotal">2</b></span></span>
+    <span id="statMiss" title="Misclicks" aria-label="Misclicks"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><g transform="scale(.08)"><path d="M225 117 163 102V32Q163 21 155.5 12Q148 3 136 0Q122 -2 111 7.5Q100 17 100 31V212Q100 218 96.5 221.5Q93 225 87.5 225Q82 225 78.5 221.5Q75 218 75 212V121L40 166Q24 185 25 209.5Q26 234 43 251L73 281Q82 290 93.5 295Q105 300 118 300H213Q229 300 243.5 291.5Q258 283 266.5 268.5Q275 254 275 237V178Q275 156 261 139Q247 122 225 117Z"/></g></svg><span><b id="sMiss">0</b>/<b id="sAllowed">1</b></span></span>
+    <span id="statTime" title="Time" aria-label="Time"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><g transform="scale(.08)"><path d="M185 241Q204 250 225 250Q225 269 213 283Q206 291 196 295.5Q186 300 175 300H50Q39 300 29 295.5Q19 291 12 282.5Q5 274 2 264Q-1 254 1 243Q8 192 56 150Q8 108 1 57Q-1 46 2 36Q5 26 12 17.5Q19 9 29 4.5Q39 0 50 0H175Q186 0 196 4.5Q206 9 213 17Q225 31 225 50Q198 50 175 63.5Q152 77 138.5 100Q125 123 125 150Q125 162 128 174L120 168Q117 165 112.5 165Q108 165 105 168L96 175Q53 208 38 245Q36 251 39.5 256.5Q43 262 50 262H175Q182 262 185.5 256.5Q189 251 187 245ZM300 150Q300 170 290 187.5Q280 205 262.5 215Q245 225 225 225Q205 225 187.5 215Q170 205 160 187.5Q150 170 150 150Q150 130 160 112.5Q170 95 187.5 85Q205 75 225 75Q245 75 262.5 85Q280 95 290 112.5Q300 130 300 150ZM253 160 238 145V119Q237 114 233.5 110Q230 106 225 106Q220 106 216.5 110Q213 114 213 119V150Q213 155 216 159L235 178Q239 181 244 181Q249 181 252.5 177.5Q256 174 256 169Q256 164 253 160ZM71 237H154Q140 215 112 193Q85 215 71 237Z"/></g></svg><b id="sTime">2</b></span>
+  </div>
+  <div class="stage">
+    <div id="board" role="group" aria-label="Game board"></div>
+    <div id="lock"><button class="ctl" id="start">Start</button></div>
+  </div>
+  <p id="status" role="status" aria-live="polite">Press Start. Memorize the blue tiles, then click where they were.</p>
+</main>
+<script>
+// From the player's description of the original. Marked "guess" where it was not stated.
+const CFG = {
+  maxLevel: 20,
+  size:     L => L + 1,                          // 2x2, 3x3, 4x4 ... (guess: keeps growing every level)
+  flashMs: 1000, gapMs: 0, recallMs: L => (L + 1) * 1000, // recall time: 2s at level 1, then +1s per level; preview is tiles x 1s; gapMs is a guess. Old note:                 // 2s, 3s, 4s ... (guess: +1s every level)
+  targets:  L => L + 1,                          // 2, 3 stated; 4+ is a guess
+  misses:   L => Math.round((L - 1) / 2 + 1),    // stated: round(levelsPassed / 2 + 1)
+  betweenMs: 900
+};
+const rng = Math.random; // inject a seeded generator for tests
+
+const $ = id => document.getElementById(id);
+const board = $('board'), status = $('status');
+const S = { phase: 'ready', level: 1, targets: new Set(), found: 0, wrong: 0, allowed: 1, tiles: [], timers: [], done: new Set() };
+
+const later = (fn, ms) => S.timers.push(setTimeout(fn, ms));
+const stop = () => { S.timers.forEach(clearTimeout); S.timers = []; clearInterval(S.tick); };
+const say = (msg, bad) => { status.textContent = msg; status.classList.toggle('bad', !!bad); };
+
+function render() {
+  $('sLvl').textContent = S.level;
+  $('sFound').textContent = S.found;
+  $('sTotal').textContent = S.targets.size || CFG.targets(S.level);
+  $('sMiss').textContent = S.wrong;
+  $('sAllowed').textContent = S.allowed;
+  $('lock').hidden = S.phase !== 'ready';
+  $('restart').classList.toggle('alert', S.phase === 'over'); // the corner button turns into a labelled green Restart on a loss
+  $('restart').disabled = S.phase === 'ready';
+}
+
+function buildBoard(n) {
+  board.style.gridTemplateColumns = 'repeat(' + n + ',1fr)';
+  board.replaceChildren();
+  S.tiles = [];
+  for (let i = 0; i < n * n; i++) {
+    const b = document.createElement('button');
+    b.className = 'tile';
+    b.setAttribute('aria-label', 'Tile ' + (i + 1));
+    b.addEventListener('click', () => pick(i));
+    board.appendChild(b);
+    S.tiles.push(b);
+  }
+}
+
+function chooseTargets(total, k) {
+  const a = [...Array(total).keys()];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return new Set(a.slice(0, k));
+}
+
+function startLevel() {
+  stop();
+  const L = S.level, n = CFG.size(L);
+  buildBoard(n);
+  S.targets = chooseTargets(n * n, CFG.targets(L));
+  S.found = 0; S.wrong = 0; S.done = new Set(); S.allowed = CFG.misses(L);
+  S.phase = 'show';
+  say('Watch the tiles.');
+  render();
+  $('sTime').textContent = CFG.recallMs(L) / 1000;
+  ['statTime', 'statMiss'].forEach(id => $(id).classList.remove('bad'));
+  let t = 600;
+  for (const i of S.targets) { // lit one at a time, order is random
+    later(() => S.tiles[i].classList.add('on'), t);
+    later(() => S.tiles[i].classList.remove('on'), t + CFG.flashMs);
+    t += CFG.flashMs + CFG.gapMs;
+  }
+  later(beginRecall, t);
+}
+
+function beginRecall() {
+  S.phase = 'pick';
+  const ms = CFG.recallMs(S.level);
+  S.deadline = performance.now() + ms;
+  say('Click the tiles that lit up. Order does not matter.');
+  S.tick = setInterval(updateTime, 100);
+  later(() => { if (S.phase === 'pick') failLevel('Time is up.'); }, ms);
+}
+
+function updateTime() {
+  $('sTime').textContent = Math.max(0, Math.ceil((S.deadline - performance.now()) / 1000));
+}
+
+function pick(i) {
+  const t = S.tiles[i];
+  if (S.phase !== 'pick' || S.done.has(i)) return;
+  S.done.add(i); // each tile counts once, lit or not
+  if (S.targets.has(i)) {
+    t.classList.add('on');
+    S.found++;
+    render();
+    if (S.found === S.targets.size) passLevel();
+  } else {
+    t.classList.add('miss');
+    S.wrong++;
+    render();
+    if (S.wrong >= S.allowed) failLevel(); // assumption: the level fails when misclicks reach the limit
+  }
+}
+
+function passLevel() {
+  clearInterval(S.tick);
+  if (S.level === CFG.maxLevel) {
+    S.phase = 'won';
+    say('You cleared all ' + CFG.maxLevel + ' levels.');
+    return;
+  }
+  S.phase = 'between';
+  say('Level ' + S.level + ' cleared.');
+  later(() => { S.level++; startLevel(); }, CFG.betweenMs);
+}
+
+function failLevel(why) {
+  clearInterval(S.tick);
+  $(why ? 'statTime' : 'statMiss').classList.add('bad'); // red on whichever stat caused the loss
+  S.phase = 'over';
+  S.targets.forEach(i => { if (!S.done.has(i)) S.tiles[i].classList.add('reveal'); });
+  say((why ? why + ' ' : '') + 'Game over on level ' + S.level + '. Outlined tiles were the ones you missed.', true);
+  render();
+}
+
+const newGame = () => { S.level = 1; startLevel(); };
+$('start').addEventListener('click', newGame);
+$('restart').addEventListener('click', newGame);
+$('sMax').textContent = CFG.maxLevel;
+buildBoard(CFG.size(1));
+render();
+</script>
+</body>
+</html>

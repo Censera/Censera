@@ -99,14 +99,6 @@ a {
   cursor: url("/.img/cursor/pointer.png"), pointer;
 }
 
-#ce:hover::before {
-  content: "\3E\3E\2010";
-}
-
-#ce:hover::after {
-  content: "\2010\2010\3E";
-}
-
 ::-webkit-scrollbar {
   width: 8px;
 }
