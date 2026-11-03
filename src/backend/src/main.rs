@@ -13,7 +13,15 @@ use uuid::Uuid;
 const COOKIE_NAME: &str = "visitor";
 const COOKIE_MAX_AGE: u64 = 60 * 60 * 24 * 365 * 1000;
 const MAX_BODY: usize = 1024;
-const PAGES: &[&str] = &["/", "/about", "/projects", "/visitors", "/minecraft"];
+const PAGES: &[&str] = &[
+    "/",
+    "/about",
+    "/projects",
+    "/visitors",
+    "/minecraft",
+    // tmp
+    "/tmp/game/memory",
+];
 
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
     let address = env::var("VISITORS_ADDR").unwrap_or_else(|_| "127.0.0.1:8787".to_owned());
@@ -64,9 +72,7 @@ fn handle(mut request: Request, db: &mut Connection) {
 
         (Method::Get, "/api/visitors") => match query_stats(db) {
             Ok((uniques, total)) => {
-                let body = format!(
-                    r#"{{"uniques":{uniques},"total":{total}}}"#
-                );
+                let body = format!(r#"{{"uniques":{uniques},"total":{total}}}"#);
 
                 json_response(body)
             }
@@ -182,8 +188,7 @@ fn write_visit(
 }
 
 fn query_stats(db: &Connection) -> rusqlite::Result<(i64, i64)> {
-    let uniques: i64 =
-        db.query_row("SELECT COUNT(*) FROM visitors", [], |row| row.get(0))?;
+    let uniques: i64 = db.query_row("SELECT COUNT(*) FROM visitors", [], |row| row.get(0))?;
 
     let total: i64 = db.query_row(
         "SELECT COALESCE(SUM(views), 0) FROM page_views",
