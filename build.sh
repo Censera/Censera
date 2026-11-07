@@ -32,7 +32,7 @@ minify -r -a -s -o dist/ "$work/site/"
 
 find dist -type f \
     \( -name '*.html' -o -name '*.css' -o -name '*.js' \
-       -o -name '*.txt' -o -name '*.xml' \
+       -o -name '*.json' -o -name '*.txt' -o -name '*.xml' \
     \) \
     -exec gzip -9 -k -f {} +
 

@@ -1,0 +1,259 @@
+:root {
+    --bg: #fff;
+    --ink: #4b4b4b;
+    --muted: #777;
+    --tile: #e5e5e5;
+    --tile-d: #cfcfcf;
+    --blue: #1cb0f6;
+    --blue-d: #1899d6;
+    --black: #000;
+    --bad: #ea2b2b;
+    --green: #58cc02;
+    --green-d: #58a700;
+    --ctl-h: 2.6rem;
+    --ctl-r: 14px;
+    color-scheme: light;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+*,
+*::before,
+*::after {
+    box-sizing: inherit;
+}
+html,
+body {
+    height: 100%;
+    margin: 0;
+}
+body {
+    background: var(--bg);
+    color: var(--ink);
+    font:
+        600 1rem/1.5 Nunito,
+        system-ui,
+        -apple-system,
+        "Segoe UI",
+        Roboto,
+        sans-serif;
+}
+main {
+    width: 100%;
+    height: 100%;
+    padding: 0.8rem 1rem;
+    display: grid;
+    gap: 0.6rem 1.2rem;
+    align-items: center;
+    grid-template-columns: auto 1fr auto auto;
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas: "title stats practice restart" "status status status status" "stage stage stage stage";
+}
+@media (max-width: 700px) {
+    main {
+        gap: 0.6rem;
+        grid-template-columns: 1fr auto;
+        grid-template-rows: auto auto auto auto 1fr;
+        grid-template-areas: "title restart" "stats stats" "practice practice" "status status" "stage stage";
+    }
+}
+h1 {
+    grid-area: title;
+    font-size: 1.6rem;
+    font-weight: 800;
+    margin: 0;
+}
+.stats {
+    grid-area: stats;
+    display: flex;
+    justify-content: center;
+    gap: 1.4rem;
+    flex-wrap: wrap;
+    color: var(--muted);
+    font-size: 0.95rem;
+    font-variant-numeric: tabular-nums;
+}
+.stats b {
+    color: var(--ink);
+    font-weight: 800;
+}
+.stats > span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.stats > span.bad,
+.stats > span.bad b {
+    color: var(--bad);
+}
+.ic {
+    width: 1.3rem;
+    height: 1.3rem;
+    fill: currentColor;
+    flex: none;
+}
+#board {
+    display: grid;
+    gap: var(--gap, 8px);
+}
+.tile {
+    border: 0;
+    padding: 0;
+    background: var(--tile);
+    box-shadow: 0 var(--lift, 3px) 0 var(--tile-d);
+    border-radius: var(--r, 6px);
+    cursor: pointer;
+    min-width: 0;
+    min-height: 0;
+}
+.tile:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 1px;
+}
+.tile.on {
+    background: var(--blue);
+    box-shadow: 0 var(--lift, 3px) 0 var(--blue-d);
+}
+.tile.miss {
+    background: var(--black);
+    box-shadow: 0 var(--lift, 3px) 0 #000;
+}
+.tile.reveal {
+    box-shadow: inset 0 0 0 3px var(--blue);
+}
+#status {
+    grid-area: status;
+    min-height: 1.5em;
+    margin: 0;
+    text-align: center;
+    font-size: 0.9rem;
+}
+#status.bad {
+    color: var(--bad);
+}
+.top {
+    display: contents;
+}
+#restart {
+    grid-area: restart;
+    justify-self: end;
+}
+.restart,
+.practice select {
+    font: inherit;
+    font-weight: 800;
+    height: var(--ctl-h);
+    color: var(--muted);
+    background-color: #fff;
+    border: 2px solid var(--tile);
+    border-bottom-width: 4px;
+    border-radius: var(--ctl-r);
+    cursor: pointer;
+    transition: background-color 0.12s;
+}
+.restart {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-width: var(--ctl-h);
+    padding: 0 0.6rem;
+}
+.restart .lbl {
+    display: none;
+}
+.restart:hover:not(:disabled),
+.practice select:hover {
+    background-color: #f7f7f7;
+}
+.restart:active:not(:disabled) {
+    transform: translateY(2px);
+    border-bottom-width: 2px;
+}
+.restart.alert {
+    padding: 0 1rem 0 0.8rem;
+    background-color: var(--green);
+    border-color: var(--green);
+    border-bottom-color: var(--green-d);
+    color: #fff;
+}
+.restart.alert:hover:not(:disabled) {
+    background-color: #61d800;
+}
+.restart.alert .lbl {
+    display: inline;
+}
+.restart:disabled {
+    opacity: 0.4;
+    cursor: default;
+}
+.restart:focus-visible,
+.practice select:focus-visible,
+button.ctl:focus-visible {
+    outline: 3px solid var(--ink);
+    outline-offset: 2px;
+}
+.practice {
+    grid-area: practice;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.8rem 1rem;
+}
+.practice label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+    font-weight: 800;
+}
+.practice select {
+    appearance: none;
+    -webkit-appearance: none;
+    padding: 0 2.1rem 0 0.9rem;
+    color: var(--ink);
+    font-size: 0.9rem;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23777' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.8rem center;
+    background-size: 0.7rem;
+}
+.stage {
+    grid-area: stage;
+    align-self: stretch;
+    position: relative;
+    display: grid;
+    min-height: 0;
+}
+#lock {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(3px);
+}
+#lock[hidden] {
+    display: none;
+}
+button.ctl {
+    font: inherit;
+    font-size: 1.1rem;
+    font-weight: 800;
+    padding: 0.85rem 2.2rem;
+    border-radius: var(--ctl-r);
+    border: 0;
+    background: var(--green);
+    color: #fff;
+    box-shadow: 0 4px 0 var(--green-d);
+    cursor: pointer;
+}
+button.ctl:hover {
+    background: #61d800;
+}
+button.ctl:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--green-d);
+}

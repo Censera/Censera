@@ -3,6 +3,7 @@ visitors.sqlite3*
 
 /target/
 /src/backend/target/
+/src/tmp/game/logic/editor
 
 *.sqlite
 *.sqlite3

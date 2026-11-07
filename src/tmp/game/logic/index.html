@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Game #2</title>
+<link rel="icon" type="image/x-icon" href="/.img/favicon/ft.ico" />
+<meta name="theme-color" content="#ffffff" />
+<meta name="description" content="Game" />
+<meta property="og:title" content="Logic game page" />
+<meta property="og:description" content="Game :]" />
+<meta property="og:type" content="website" />
+<meta
+    property="og:url"
+    content="https://censera.space/tmp/game/logic"
+/>
+<meta
+    property="og:image"
+    content="https://censera.me/.img/favicon/ft.ico"
+/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap">
+<link rel="stylesheet" href="./style.css">
+<script src="./script.js" defer></script>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-bot" viewBox="0 0 15 15"><path d="M12.5547,1c-2.1441,0-5.0211,1.471-6.9531,4H4 C2.8427,5,2.1794,5.8638,1.7227,6.7773L1.1113,8h1.4434H4l1.5,1.5L7,11v1.4453v1.4434l1.2227-0.6113 C9.1362,12.8206,10,12.1573,10,11V9.3984c2.529-1.932,4-4.809,4-6.9531V1H12.5547z M10,4c0.5523,0,1,0.4477,1,1l0,0 c0,0.5523-0.4477,1-1,1l0,0C9.4477,6,9,5.5523,9,5v0C9,4.4477,9.4477,4,10,4L10,4z M3.5,10L3,10.5C2.2778,11.2222,2,13,2,13 s1.698-0.198,2.5-1L5,11.5L3.5,10z"/></symbol>
+  <symbol id="i-star" viewBox="0 0 300 300"><path d="M17 155 61 187 44 240Q40 252 44 264Q48 277 59 285Q70 293 83 293Q96 293 106 285L150 253L194 285Q204 293 217 293Q230 293 241 285Q252 277 256 264Q260 252 256 240L239 187L283 155Q294 147 298 134Q302 122 298 110Q294 98 284 90Q273 82 260 82H205L188 30Q184 18 174 10Q163 2 150 2Q137 2 126 10Q116 18 112 30L95 82H40Q27 82 16 90Q6 98 2 110Q-2 122 2 134Q6 147 17 155Z"/></symbol>
+  <symbol id="i-stop" viewBox="0 0 300 300"><path d="M63 0H238Q254 0 268 8Q283 17 292 32Q300 46 300 63V238Q300 254 292 268Q283 283 268 292Q254 300 237 300H63Q46 300 32 292Q17 283 8 268Q0 254 0 237V63Q0 46 8 32Q17 17 32 8Q46 0 63 0Z"/></symbol>
+  <symbol id="i-back" viewBox="0 0 300 300"><path d="M240 5Q230 -1 218 0Q207 1 197 8L71 117Q66 120 63 125V12Q62 7 58 4Q55 0 50 0Q45 0 42 4Q38 7 38 13V287Q37 293 41 296Q45 300 50 300Q55 300 58 296Q62 293 62 287V175Q66 180 71 183L197 292Q208 300 221 300Q231 300 241 295Q251 290 257 280Q263 271 263 259V41Q263 29 257 20Q251 10 240 5Z"/></symbol>
+  <symbol id="i-fwd" viewBox="0 0 300 300"><path d="M60 5Q70 -1 82 0Q93 1 102 8L229 117Q234 120 237 125V12Q237 7 241 4Q245 0 250 0Q255 0 258 4Q262 7 262 12V287Q262 293 258 296Q255 300 250 300Q245 300 241 296Q237 293 237 287V175Q234 180 229 183L102 292Q91 300 78 300Q69 300 59 295Q49 290 43 280Q37 271 37 259V41Q37 29 43 20Q49 10 60 5Z"/></symbol>
+  <symbol id="i-play" viewBox="0 0 300 300"><path d="M256 100 137 12Q123 2 105 0Q87 -1 72 7Q56 15 47 30Q38 45 38 63V237Q37 255 46 270Q56 285 72 293Q87 301 105 300Q123 298 137 288L256 200Q268 192 275 178Q282 165 282 150Q282 135 275 122Q268 109 256 100Z"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 300 300"><path d="M81 0Q63 0 50 13Q37 26 37 44V256Q38 274 50 287Q63 300 81 300Q99 300 112 287Q125 274 125 256V44Q125 26 112 13Q99 0 81 0ZM219 0Q201 0 188 13Q175 26 175 44V256Q175 274 188 287Q201 300 219 300Q237 300 250 287Q263 274 263 256V44Q263 26 250 13Q237 0 219 0Z"/></symbol>
+  <symbol id="i-speed" viewBox="0 0 300 300"><path d="M250 51Q208 16 160 12Q117 9 78 31Q40 53 18 92Q-4 131 0 174Q4 222 39 264Q44 270 51 273Q58 276 66 275Q73 274 80 270Q86 265 89 258L92 252Q96 245 98 242Q102 237 107 237H193Q198 237 202 242Q205 245 208 253L211 258Q215 265 221 270Q227 274 234 275Q241 276 248 273Q255 270 260 264Q280 242 290 214Q301 185 300 155Q298 125 285 98Q272 71 250 51ZM221 109 174 156Q176 164 173 172Q170 180 162 184Q155 188 146 187Q138 186 132 180Q126 174 125 166Q124 157 128 150Q133 143 140 140Q148 136 156 138L204 91Q207 88 212 88Q218 88 222 92Q225 95 225 100Q225 105 221 109Z"/></symbol>
+  <symbol id="i-apps" viewBox="0 0 300 300"><path d="M50 0H87Q108 0 122 14Q137 29 137 50V87Q137 108 122 122Q108 137 87 137H50Q29 138 14 123Q0 108 0 87V50Q0 29 14 14Q29 0 50 0ZM213 0H250Q271 0 286 14Q300 29 300 50V87Q300 108 286 122Q271 137 250 137H213Q192 137 178 122Q163 108 163 87V50Q162 29 177 14Q192 0 213 0ZM50 162H87Q108 162 122 177Q137 192 137 212V250Q137 271 122 286Q108 300 87 300H50Q29 300 14 286Q0 271 0 250V213Q0 192 14 177Q29 162 50 162ZM213 162H250Q271 162 286 177Q300 192 300 212V250Q300 271 286 286Q271 300 250 300H213Q192 300 178 286Q163 271 163 250V213Q162 192 177 177Q192 162 213 162Z"/></symbol>
+  <symbol id="i-up" viewBox="0 0 300 300"><path d="M230 61 181 12Q168 0 150 0Q132 0 119 12L70 61Q65 67 65 74Q65 82 70 88Q76 93 84 93Q91 93 97 88L132 53V281Q132 289 138 294Q143 300 151 300Q159 300 164 294Q170 289 170 281L169 53L204 88Q207 92 212 93Q217 94 222 93Q227 92 230 88Q234 85 236 80Q237 75 236 70Q234 65 230 61Z"/></symbol>
+  <symbol id="i-left" viewBox="0 0 300 300"><path d="M20 150Q27 150 32 154Q38 159 39 166Q43 193 58 215Q74 237 98 250Q122 263 150 263Q184 262 212 244Q239 226 253 196Q267 165 261 130Q257 105 242 84Q227 64 204 51Q172 34 138 38Q103 42 77 65L91 79Q95 82 95 88Q95 93 92 96Q88 100 82 100H25Q20 100 16 96Q12 93 13 87V30Q13 25 16 22Q20 18 25 18Q30 18 34 21L50 38Q85 8 131 2Q177 -5 220 18Q252 34 272 63Q293 92 298 127Q305 172 286 212Q268 252 232 276Q195 300 150 300Q113 300 81 283Q49 266 28 237Q7 208 2 172Q0 163 6 156Q11 150 20 150Z"/></symbol>
+  <symbol id="i-right" viewBox="0 0 300 300"><path d="M281 150Q273 150 268 154Q263 159 262 166Q257 197 238 220Q220 243 192 254Q164 266 134 262Q104 257 80 238Q57 220 46 192Q34 164 38 134Q43 103 62 80Q81 57 108 46Q136 34 168 38Q199 43 224 64L209 78Q206 82 206 87Q206 92 210 96Q213 100 218 100H276Q281 100 284 96Q288 92 288 87V30Q288 25 284 21Q281 17 276 17Q270 17 267 21L250 38Q220 11 180 3Q141 -5 103 8Q65 20 38 50Q11 81 4 120Q-4 159 8 197Q21 235 52 262Q82 289 121 297Q160 305 198 292Q236 280 263 249Q293 216 299 172Q300 164 296 158Q291 151 283 150Z"/></symbol>
+  <symbol id="i-x" viewBox="0 0 300 300"><path d="M177 150 295 32Q300 27 300 19Q300 11 294 6Q289 0 281 0Q273 0 268 5L150 123L32 5Q27 0 19 0Q11 0 6 6Q0 11 0 19Q0 27 5 32L123 150L5 268Q0 273 0 281Q0 289 6 294Q11 300 19 300Q27 300 32 295L150 177L268 295Q273 300 281 300Q289 300 294 294Q300 289 300 281Q300 273 295 268Z"/></symbol>
+  <symbol id="i-fill" viewBox="-40 -40 380 380"><path d="M268 173 160 282Q148 294 132 298Q116 302 100 298Q83 294 71 282L18 229Q6 217 2 200Q-2 184 2 168Q6 152 18 140L92 67L56 30Q51 25 52 18Q54 11 62 9Q69 7 74 13L186 127Q190 130 195 130Q200 130 204 126Q207 122 207 117Q207 112 204 109L113 17Q112 13 113 9Q114 5 118 2Q122 0 126 0Q131 0 134 4L296 166Q302 171 300 178Q298 185 291 187Q284 189 279 184ZM259 230Q257 232 255 236Q246 248 243 254Q237 263 237 269Q238 282 247 291Q256 300 269 300Q282 300 291 291Q300 282 300 269Q300 263 294 253Q291 247 283 235L279 230Q275 225 268 225Q262 225 259 230Z"/></symbol>
+  <symbol id="i-trophy" viewBox="0 0 300 300"><path d="M176 200H188Q227 200 254 187Q277 176 289 156Q300 139 300 119Q300 103 290 91Q280 79 265 76Q268 70 270 63Q273 52 271 40Q269 29 262 20Q255 11 244 6Q233 0 222 0H78Q67 0 56 6Q45 11 38 20Q31 29 29 40Q27 52 30 63Q32 70 35 76Q20 79 10 91Q0 103 0 119Q0 139 11 156Q23 176 46 187Q73 200 113 200H124Q125 206 125 212V250Q126 261 118 268Q111 276 100 275H75Q70 275 66 278Q63 282 63 288Q63 293 66 296Q70 300 75 300H225Q230 300 234 296Q238 293 238 288Q238 282 234 278Q230 275 225 275H200Q189 276 182 268Q174 261 175 250V212Q175 206 176 200ZM197 164Q229 136 252 99Q254 100 256 100Q264 100 270 106Q275 111 275 119Q275 133 266 146Q257 159 239 166Q218 175 188 175H187Q191 169 197 164ZM113 175Q82 175 61 166Q43 159 34 146Q25 133 25 119Q25 111 30 106Q36 100 44 100Q46 100 48 99Q71 136 103 164Q109 169 113 175Z"/></symbol>
+</svg>
+<div class="app" id="app">
+  <header class="top"><b>Game #2</b><span class="right" id="topRight"></span></header>
+
+  <section id="levels" hidden>
+    <div id="grid"></div>
+    <p class="empty" id="empty" hidden>No maps found in maps/</p>
+  </section>
+
+  <section class="game" id="game" hidden>
+    <div class="left">
+      <div class="box" id="mapBox"><div id="mapWrap"><div id="map" role="img" aria-label="Map"></div><p id="err" hidden></p></div></div>
+      <div><p class="lbl">Execution history</p><div class="hist" id="hist" aria-live="polite"></div></div>
+      <div class="ctls">
+        <button class="cbtn stop" id="bStop" aria-label="Stop" title="Stop and reset (Esc)"><svg class="ic"><use href="#i-stop"/></svg></button>
+        <button class="cbtn p" id="bBack" aria-label="Step back" title="Step back (Left)"><svg class="ic"><use href="#i-back"/></svg></button>
+        <button class="cbtn p play" id="bPlay" aria-label="Play" title="Play / pause (Space)"></button>
+        <button class="cbtn p" id="bFwd" aria-label="Step forward" title="Step forward (Right)"><svg class="ic"><use href="#i-fwd"/></svg></button>
+        <button class="cbtn" id="bSpeed" aria-label="Speed" title="Speed"><svg class="ic"><use href="#i-speed"/></svg><span class="bd" id="spd">x1</span></button>
+      </div>
+    </div>
+    <div class="side" id="side">
+      <div><p class="lbl">Functions</p><div id="funcs"></div></div>
+      <div><p class="lbl">Commands</p><div class="tools" id="dirs"></div><div class="tools" id="calls"></div></div>
+      <div><p class="lbl">Conditions</p><div class="tools" id="conds"></div></div>
+      <div id="fillBox" hidden><p class="lbl">Fill</p><div class="tools" id="fills"></div></div>
+    </div>
+  </section>
+</div>
+</body>
+</html>
