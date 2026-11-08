@@ -6,6 +6,8 @@
     --soft: #f7f7f7;
     --soft-btn: #f1f1f1;
     --ink: #4b4b4b;
+    --miss: #3c3c3c;
+    --miss-d: #272727;
     --muted: #777;
     --hare: #afafaf;
     --line: #e5e5e5;
@@ -290,8 +292,8 @@ symbol {
     box-shadow: 0 var(--tl, 3px) 0 var(--blue-d);
 }
 .tile.miss {
-    background: var(--red);
-    box-shadow: 0 var(--tl, 3px) 0 var(--red-d);
+    background: var(--miss);
+    box-shadow: 0 var(--tl, 3px) 0 var(--miss-d);
 }
 .tile.reveal {
     box-shadow: inset 0 0 0 3px var(--blue);
