@@ -9,9 +9,15 @@
         <title>Game #1</title>
         <link rel="icon" type="image/x-icon" href="/.img/favicon/ft.ico" />
         <meta name="theme-color" content="#ffffff" />
-        <meta name="description" content="Game" />
-        <meta property="og:title" content="Memory game page" />
-        <meta property="og:description" content="Game :]" />
+        <meta
+            name="description"
+            content="A replica of the first game of the selection test."
+        />
+        <meta property="og:title" content="Game #1" />
+        <meta
+            property="og:description"
+            content="A replica of the first game of the selection test."
+        />
         <meta property="og:type" content="website" />
         <meta
             property="og:url"
@@ -24,98 +30,126 @@
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link
             rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800&display=swap"
         />
         <link rel="stylesheet" href="./style.css" />
         <script src="./script.js" defer></script>
     </head>
     <body>
-        <main>
+        <svg width="0" height="0" style="position: absolute" aria-hidden="true">
+            <symbol id="i-up" viewBox="0 0 300 300">
+                <path
+                    d="M230 61 181 12Q168 0 150 0Q132 0 119 12L70 61Q65 67 65 74Q65 82 70 88Q76 93 84 93Q91 93 97 88L132 53V281Q132 289 138 294Q143 300 151 300Q159 300 164 294Q170 289 170 281L169 53L204 88Q207 92 212 93Q217 94 222 93Q227 92 230 88Q234 85 236 80Q237 75 236 70Q234 65 230 61Z"
+                />
+            </symbol>
+            <symbol id="i-restart" viewBox="0 0 300 300">
+                <path
+                    d="M287 150Q282 150 278.5 153Q275 156 275 161Q272 195 252.5 222Q233 249 203 263.5Q173 278 139 275Q105 272 78 253Q51 234 36.5 204Q22 174 25 140Q28 106 47 78.5Q66 51 96 37Q126 23 160 25Q183 27 203 36.5Q223 46 239 62H200Q195 62 191.5 66Q188 70 188 75Q188 80 191.5 83.5Q195 87 200 87H252Q262 87 268.5 80.5Q275 74 275 64V12Q275 7 271.5 3.5Q268 0 262.5 0Q257 0 253.5 3.5Q250 7 250 12V38Q220 11 181 3.5Q142 -4 104 8Q66 20 38.5 50.5Q11 81 3.5 120Q-4 159 8 197Q20 235 50.5 262Q81 289 120 297Q159 305 197 292.5Q235 280 262 250Q278 232 287.5 210Q297 188 299 164Q300 159 296.5 155Q293 151 288 150Z"
+                />
+            </symbol>
+            <symbol id="i-level" viewBox="0 0 300 300">
+                <path
+                    d="M285 57Q278 54 270.5 55.5Q263 57 257 62L225 95L168 37Q160 30 150 30Q140 30 132 37L75 95L43 62Q37 57 29.5 55.5Q22 54 15 57Q8 60 4 66.5Q0 73 0 80V212Q0 229 8.5 243.5Q17 258 31.5 266.5Q46 275 63 275H238Q254 275 268.5 266.5Q283 258 291.5 243.5Q300 229 300 213V80Q300 73 296 66.5Q292 60 285 57Z"
+                />
+            </symbol>
+            <symbol id="i-found" viewBox="0 0 300 300">
+                <path
+                    d="M300 150Q300 191 280 225.5Q260 260 225.5 280Q191 300 150 300Q109 300 74.5 280Q40 260 20 225.5Q0 191 0 150Q0 109 20 74.5Q40 40 74.5 20Q109 0 150 0Q164 0 177 2Q182 3 185 7.5Q188 12 187 17Q186 22 182 25Q178 28 173 27Q162 25 150 25Q116 25 87.5 42Q59 59 42 87.5Q25 116 25 150Q25 184 42 212.5Q59 241 87.5 258Q116 275 150 275Q184 275 212.5 258Q241 241 258 212.5Q275 184 275 150Q275 139 273 127Q272 122 275 118Q278 114 283 113Q288 112 292.5 115Q297 118 298 123Q300 136 300 150ZM161 76Q166 76 170 73Q174 70 175 65Q176 60 172.5 56Q169 52 164 51Q157 50 150 50Q123 50 100 63.5Q77 77 63.5 100Q50 123 50 150Q50 177 63.5 200Q77 223 100 236.5Q123 250 150 250Q177 250 200 236.5Q223 223 236.5 200Q250 177 250 150Q250 143 249 136Q248 131 244 127.5Q240 124 235 125Q230 126 227 130Q224 134 224.5 139Q225 144 225 150Q225 170 215 187.5Q205 205 187.5 215Q170 225 150 225Q130 225 112.5 215Q95 205 85 187.5Q75 170 75 150Q75 130 85 112.5Q95 95 112.5 85Q130 75 150 75Q156 75 161 76ZM134 114Q131 110 126 109.5Q121 109 117 113Q109 120 104.5 129.5Q100 139 100 150Q100 171 114.5 185.5Q129 200 150 200Q161 200 170.5 195.5Q180 191 187 183Q191 180 190.5 174.5Q190 169 186.5 165.5Q183 162 177.5 162.5Q172 163 169 167Q161 175 150.5 175Q140 175 132.5 167.5Q125 160 125 149.5Q125 139 134 131Q137 128 137.5 123Q138 118 135 114ZM154 129Q150 132 150 137.5Q150 143 153.5 146.5Q157 150 162.5 150Q168 150 172 146L230 87H263Q268 87 272 84L297 59Q299 56 300 52.5Q301 49 299.5 45.5Q298 42 295 39.5Q292 37 288 37H263V12Q263 9 261 5.5Q259 2 255.5 1Q252 0 248 0.5Q244 1 242 4L217 29Q213 32 213 38V70Z"
+                />
+            </symbol>
+            <symbol id="i-miss" viewBox="0 0 300 300">
+                <path
+                    d="M225 117 163 102V32Q163 21 155.5 12Q148 3 136 0Q122 -2 111 7.5Q100 17 100 31V212Q100 218 96.5 221.5Q93 225 87.5 225Q82 225 78.5 221.5Q75 218 75 212V121L40 166Q24 185 25 209.5Q26 234 43 251L73 281Q82 290 93.5 295Q105 300 118 300H213Q229 300 243.5 291.5Q258 283 266.5 268.5Q275 254 275 237V178Q275 156 261 139Q247 122 225 117Z"
+                />
+            </symbol>
+            <symbol id="i-time" viewBox="0 0 300 300">
+                <path
+                    d="M185 241Q204 250 225 250Q225 269 213 283Q206 291 196 295.5Q186 300 175 300H50Q39 300 29 295.5Q19 291 12 282.5Q5 274 2 264Q-1 254 1 243Q8 192 56 150Q8 108 1 57Q-1 46 2 36Q5 26 12 17.5Q19 9 29 4.5Q39 0 50 0H175Q186 0 196 4.5Q206 9 213 17Q225 31 225 50Q198 50 175 63.5Q152 77 138.5 100Q125 123 125 150Q125 162 128 174L120 168Q117 165 112.5 165Q108 165 105 168L96 175Q53 208 38 245Q36 251 39.5 256.5Q43 262 50 262H175Q182 262 185.5 256.5Q189 251 187 245ZM300 150Q300 170 290 187.5Q280 205 262.5 215Q245 225 225 225Q205 225 187.5 215Q170 205 160 187.5Q150 170 150 150Q150 130 160 112.5Q170 95 187.5 85Q205 75 225 75Q245 75 262.5 85Q280 95 290 112.5Q300 130 300 150ZM253 160 238 145V119Q237 114 233.5 110Q230 106 225 106Q220 106 216.5 110Q213 114 213 119V150Q213 155 216 159L235 178Q239 181 244 181Q249 181 252.5 177.5Q256 174 256 169Q256 164 253 160ZM71 237H154Q140 215 112 193Q85 215 71 237Z"
+                />
+            </symbol>
+        </svg>
+        <div class="app">
             <header class="top">
-                <h1>Game #1</h1>
-                <button
-                    class="restart"
-                    id="restart"
-                    disabled
-                    aria-label="Restart"
-                    title="Restart"
+                <span class="lead"
+                    ><a
+                        class="back"
+                        id="back"
+                        href="/tmp"
+                        aria-label="Back"
+                        title="Back"
+                        ><svg class="ic rl"><use href="#i-up" /></svg
+                    ></a>
+                    <h1>Game #1</h1></span
                 >
-                    <svg class="ic" viewBox="0 0 24 24" aria-hidden="true">
-                        <g transform="scale(.08)">
-                            <path
-                                d="M287 150Q282 150 278.5 153Q275 156 275 161Q272 195 252.5 222Q233 249 203 263.5Q173 278 139 275Q105 272 78 253Q51 234 36.5 204Q22 174 25 140Q28 106 47 78.5Q66 51 96 37Q126 23 160 25Q183 27 203 36.5Q223 46 239 62H200Q195 62 191.5 66Q188 70 188 75Q188 80 191.5 83.5Q195 87 200 87H252Q262 87 268.5 80.5Q275 74 275 64V12Q275 7 271.5 3.5Q268 0 262.5 0Q257 0 253.5 3.5Q250 7 250 12V38Q220 11 181 3.5Q142 -4 104 8Q66 20 38.5 50.5Q11 81 3.5 120Q-4 159 8 197Q20 235 50.5 262Q81 289 120 297Q159 305 197 292.5Q235 280 262 250Q278 232 287.5 210Q297 188 299 164Q300 159 296.5 155Q293 151 288 150Z"
-                            />
-                        </g></svg
-                    ><span class="lbl">Restart</span>
-                </button>
+                <span class="right"
+                    ><button
+                        class="hb"
+                        id="restart"
+                        disabled
+                        aria-label="Restart"
+                        title="Restart"
+                    >
+                        <svg class="ic"><use href="#i-restart" /></svg
+                        ><span class="txt">Restart</span>
+                    </button></span
+                >
             </header>
-            <div class="stats" aria-label="Progress">
-                <span title="Level" aria-label="Level"
-                    ><svg class="ic" viewBox="0 0 24 24" aria-hidden="true">
-                        <g transform="scale(.08)">
-                            <path
-                                d="M285 57Q278 54 270.5 55.5Q263 57 257 62L225 95L168 37Q160 30 150 30Q140 30 132 37L75 95L43 62Q37 57 29.5 55.5Q22 54 15 57Q8 60 4 66.5Q0 73 0 80V212Q0 229 8.5 243.5Q17 258 31.5 266.5Q46 275 63 275H238Q254 275 268.5 266.5Q283 258 291.5 243.5Q300 229 300 213V80Q300 73 296 66.5Q292 60 285 57Z"
-                            />
-                        </g></svg
-                    ><span><b id="sLvl">1</b>/<span id="sMax"></span></span
-                ></span>
-                <span title="Found" aria-label="Found"
-                    ><svg class="ic" viewBox="0 0 24 24" aria-hidden="true">
-                        <g transform="scale(.08)">
-                            <path
-                                d="M300 150Q300 191 280 225.5Q260 260 225.5 280Q191 300 150 300Q109 300 74.5 280Q40 260 20 225.5Q0 191 0 150Q0 109 20 74.5Q40 40 74.5 20Q109 0 150 0Q164 0 177 2Q182 3 185 7.5Q188 12 187 17Q186 22 182 25Q178 28 173 27Q162 25 150 25Q116 25 87.5 42Q59 59 42 87.5Q25 116 25 150Q25 184 42 212.5Q59 241 87.5 258Q116 275 150 275Q184 275 212.5 258Q241 241 258 212.5Q275 184 275 150Q275 139 273 127Q272 122 275 118Q278 114 283 113Q288 112 292.5 115Q297 118 298 123Q300 136 300 150ZM161 76Q166 76 170 73Q174 70 175 65Q176 60 172.5 56Q169 52 164 51Q157 50 150 50Q123 50 100 63.5Q77 77 63.5 100Q50 123 50 150Q50 177 63.5 200Q77 223 100 236.5Q123 250 150 250Q177 250 200 236.5Q223 223 236.5 200Q250 177 250 150Q250 143 249 136Q248 131 244 127.5Q240 124 235 125Q230 126 227 130Q224 134 224.5 139Q225 144 225 150Q225 170 215 187.5Q205 205 187.5 215Q170 225 150 225Q130 225 112.5 215Q95 205 85 187.5Q75 170 75 150Q75 130 85 112.5Q95 95 112.5 85Q130 75 150 75Q156 75 161 76ZM134 114Q131 110 126 109.5Q121 109 117 113Q109 120 104.5 129.5Q100 139 100 150Q100 171 114.5 185.5Q129 200 150 200Q161 200 170.5 195.5Q180 191 187 183Q191 180 190.5 174.5Q190 169 186.5 165.5Q183 162 177.5 162.5Q172 163 169 167Q161 175 150.5 175Q140 175 132.5 167.5Q125 160 125 149.5Q125 139 134 131Q137 128 137.5 123Q138 118 135 114ZM154 129Q150 132 150 137.5Q150 143 153.5 146.5Q157 150 162.5 150Q168 150 172 146L230 87H263Q268 87 272 84L297 59Q299 56 300 52.5Q301 49 299.5 45.5Q298 42 295 39.5Q292 37 288 37H263V12Q263 9 261 5.5Q259 2 255.5 1Q252 0 248 0.5Q244 1 242 4L217 29Q213 32 213 38V70Z"
-                            />
-                        </g></svg
-                    ><span
-                        ><b id="sFound">0</b>/<b id="sTotal">2</b></span
-                    ></span
-                >
-                <span id="statMiss" title="Misclicks" aria-label="Misclicks"
-                    ><svg class="ic" viewBox="0 0 24 24" aria-hidden="true">
-                        <g transform="scale(.08)">
-                            <path
-                                d="M225 117 163 102V32Q163 21 155.5 12Q148 3 136 0Q122 -2 111 7.5Q100 17 100 31V212Q100 218 96.5 221.5Q93 225 87.5 225Q82 225 78.5 221.5Q75 218 75 212V121L40 166Q24 185 25 209.5Q26 234 43 251L73 281Q82 290 93.5 295Q105 300 118 300H213Q229 300 243.5 291.5Q258 283 266.5 268.5Q275 254 275 237V178Q275 156 261 139Q247 122 225 117Z"
-                            />
-                        </g></svg
-                    ><span
-                        ><b id="sMiss">0</b>/<b id="sAllowed">1</b></span
-                    ></span
-                >
-                <span id="statTime" title="Time" aria-label="Time"
-                    ><svg class="ic" viewBox="0 0 24 24" aria-hidden="true">
-                        <g transform="scale(.08)">
-                            <path
-                                d="M185 241Q204 250 225 250Q225 269 213 283Q206 291 196 295.5Q186 300 175 300H50Q39 300 29 295.5Q19 291 12 282.5Q5 274 2 264Q-1 254 1 243Q8 192 56 150Q8 108 1 57Q-1 46 2 36Q5 26 12 17.5Q19 9 29 4.5Q39 0 50 0H175Q186 0 196 4.5Q206 9 213 17Q225 31 225 50Q198 50 175 63.5Q152 77 138.5 100Q125 123 125 150Q125 162 128 174L120 168Q117 165 112.5 165Q108 165 105 168L96 175Q53 208 38 245Q36 251 39.5 256.5Q43 262 50 262H175Q182 262 185.5 256.5Q189 251 187 245ZM300 150Q300 170 290 187.5Q280 205 262.5 215Q245 225 225 225Q205 225 187.5 215Q170 205 160 187.5Q150 170 150 150Q150 130 160 112.5Q170 95 187.5 85Q205 75 225 75Q245 75 262.5 85Q280 95 290 112.5Q300 130 300 150ZM253 160 238 145V119Q237 114 233.5 110Q230 106 225 106Q220 106 216.5 110Q213 114 213 119V150Q213 155 216 159L235 178Q239 181 244 181Q249 181 252.5 177.5Q256 174 256 169Q256 164 253 160ZM71 237H154Q140 215 112 193Q85 215 71 237Z"
-                            />
-                        </g></svg
-                    ><b id="sTime">2</b></span
-                >
+            <div class="bar">
+                <div class="stats" aria-label="Progress">
+                    <span title="Level" aria-label="Level"
+                        ><svg class="ic"><use href="#i-level" /></svg
+                        ><span><b id="sLvl">1</b>/<span id="sMax"></span></span
+                    ></span>
+                    <span title="Found" aria-label="Found"
+                        ><svg class="ic"><use href="#i-found" /></svg
+                        ><span
+                            ><b id="sFound">0</b>/<b id="sTotal">2</b></span
+                        ></span
+                    >
+                    <span id="statMiss" title="Misclicks" aria-label="Misclicks"
+                        ><svg class="ic"><use href="#i-miss" /></svg
+                        ><span
+                            ><b id="sMiss">0</b>/<b id="sAllowed">1</b></span
+                        ></span
+                    >
+                    <span id="statTime" title="Time" aria-label="Time"
+                        ><svg class="ic"><use href="#i-time" /></svg
+                        ><b id="sTime">2</b></span
+                    >
+                </div>
+                <div class="practice">
+                    <label
+                        >Jump
+                        <select id="selLevel"></select
+                    ></label>
+                    <label
+                        >Time
+                        <select id="selTime">
+                            <option value="1">Normal</option>
+                            <option value="1.5">×1.5</option>
+                            <option value="2">×2</option>
+                            <option value="3">×3</option>
+                        </select>
+                    </label>
+                </div>
             </div>
             <div class="stage">
                 <div id="board" role="group" aria-label="Game board"></div>
+                <div id="note" role="status" aria-live="polite"></div>
                 <div id="lock">
-                    <button class="ctl" id="start">Start</button>
+                    <span class="spin" id="boot" hidden></span>
+                    <div class="intro" id="intro" hidden>
+                        <button class="next big" id="start">Start</button>
+                        <p>
+                            Memorize the blue tiles, then click where they were.
+                            Order doesn’t matter.
+                        </p>
+                    </div>
                 </div>
             </div>
-            <p id="status" role="status" aria-live="polite">
-                Press Start. Memorize the blue tiles, then click where they
-                were.
-            </p>
-            <div class="practice">
-                <label
-                    >Jump
-                    <select id="selLevel"></select
-                ></label>
-                <label
-                    >Time
-                    <select id="selTime">
-                        <option value="1">Normal</option>
-                        <option value="1.5">×1.5</option>
-                        <option value="2">×2</option>
-                        <option value="3">×3</option>
-                    </select></label
-                >
-            </div>
-        </main>
+        </div>
+        <div id="mobile" role="alert">
+            <p><b>Not made for mobile</b>Open this on a computer.</p>
+        </div>
     </body>
 </html>

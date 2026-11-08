@@ -1,4 +1,11 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://censera.space/sitemap.xml
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for HTML5 for Linux version 5.7.45">
+  <title></title>
+</head>
+<body>
+  User-agent: * Allow: / Sitemap: https://censera.space/sitemap.xml
+</body>
+</html>

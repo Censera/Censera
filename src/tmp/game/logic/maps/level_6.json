@@ -11,10 +11,6 @@
     "y": 2,
     "dir": "right"
   },
-  "functions": [
-    10,
-    10,
-    10
-  ],
+  "functions": [10, 10, 10],
   "fill": false
 }

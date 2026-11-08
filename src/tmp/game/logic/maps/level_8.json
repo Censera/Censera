@@ -16,9 +16,6 @@
     "y": 1,
     "dir": "right"
   },
-  "functions": [
-    5,
-    8
-  ],
+  "functions": [5, 8],
   "fill": false
 }

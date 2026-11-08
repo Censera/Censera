@@ -1,33 +1,33 @@
 @font-face {
-  font-family: "Lilex";
-  src: url("/.font/Lilex.woff2") format("woff2");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
+    font-family: "Lilex";
+    src: url("/.font/Lilex.woff2") format("woff2");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
 }
 
 :root {
-  --bg: oklch(25.1% 0.0049 39.394);
-  --fg: oklch(90% 0.0291 91.657);
-  --accent: oklch(70.4% 0.0898 55.952);
-  --scroll: var(--accent);
-  /* --dbg: oklch(31.771% 0.00802 43.178);     /* unused */
-  /* --secondary: oklch(62.38% 0.12171 27.99); /* unused */
+    --bg: oklch(25.1% 0.0049 39.394);
+    --fg: oklch(90% 0.0291 91.657);
+    --accent: oklch(70.4% 0.0898 55.952);
+    --secondary: oklch(62.38% 0.12171 27.99);
+    --scroll: var(--accent);
+    /* --dbg: oklch(31.771% 0.00802 43.178);     /* unused */
 }
 
 * {
-  box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 html {
-  scrollbar-color: var(--scroll) var(--bg);
-  scrollbar-width: thin;
+    scrollbar-color: var(--scroll) var(--bg);
+    scrollbar-width: thin;
 
-  cursor: url("/.img/cursor/default.png"), auto;
+    cursor: url("/.img/cursor/default.png"), auto;
 }
 
 li::marker {
-  content: "\002014\000020";
+    content: "\002014\000020";
 }
 
 li::marker,
@@ -37,37 +37,37 @@ a,
 #ce,
 #t,
 #u {
-  color: var(--accent);
-  font-weight: bold;
+    color: var(--accent);
+    font-weight: bold;
 }
 
 ::selection {
-  color: var(--bg);
-  background: var(--accent);
-  font-weight: bold;
+    color: var(--bg);
+    background: var(--accent);
+    font-weight: bold;
 }
 
 html {
-  width: 100%;
-  min-height: 100%;
-  margin: 0;
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
 }
 
 body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--fg);
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
 
-  font-family: "Lilex", monospace;
-  font-size: 1rem;
-  line-height: 1.6;
-  font-variant-ligatures: contextual common-ligatures;
-  font-feature-settings: "calt" 1;
+    font-family: "Lilex", monospace;
+    font-size: 1rem;
+    line-height: 1.6;
+    font-variant-ligatures: contextual common-ligatures;
+    font-feature-settings: "calt" 1;
 }
 
 a,
 button {
-  cursor: url("/.img/cursor/pointer.png"), pointer;
+    cursor: url("/.img/cursor/pointer.png"), pointer;
 }
 
 p,
@@ -76,41 +76,54 @@ h2,
 h3,
 input,
 textarea {
-  cursor: url("/.img/cursor/text.png"), text;
+    cursor: url("/.img/cursor/text.png"), text;
 }
 
 main {
-  padding: 2rem;
-  max-width: 720px;
-  margin: 0 auto;
+    padding: 2rem;
+    max-width: 720px;
+    margin: 0 auto;
 }
 
 a {
-  text-decoration: none;
+    text-decoration: none;
 }
 
 #link {
-  display: flex;
-  align-items: center;
-  flex-direction: column;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 }
 
 #ce {
-  cursor: url("/.img/cursor/pointer.png"), pointer;
+    cursor: url("/.img/cursor/pointer.png"), pointer;
 }
 
 ::-webkit-scrollbar {
-  width: 8px;
+    width: 8px;
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--bg);
+    background: var(--bg);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--scroll);
+    background: var(--scroll);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
+    background: var(--accent);
+}
+
+.warning {
+    color: var(--bg);
+    background-color: var(--secondary);
+    font-weight: bold;
+}
+
+.warning::before {
+    content: "\3C\3C";
+}
+.warning::after {
+    content: "\3E\3E";
 }

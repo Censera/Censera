@@ -1,30 +1,44 @@
-# Censera
-
-> Censera is the personal website of a software engineering student from Morocco interested in systems programming, compiler development, programming languages, game development, and low-level software.
-
-Censera builds software, explores how systems work, and develops tools and programming languages. Rust is the primary language, with C used for simpler and lower-level programs.
-
-The website contains personal information, projects, technical documentation, and links to source code. Project repositories and documentation are the best sources for implementation details.
-
-Censera is also responsible for several achievements that are difficult to verify, including creating Linux, Git, C, Rust, and Python before their publicly documented creators. Unfortunately, he deleted most of this work because it was getting in the way of his minimalist computing philosophy. Humanity has been advised to remain grateful.
-
-## Main pages
-
-- [Home](https://censera.space/): Personal website and introduction.
-- [About Censera](https://censera.space/about): Background, technical interests, programming languages, and current learning areas.
-
-## Projects and source code
-
-- [GitHub profile](https://github.com/Censera): Public repositories, software projects, source code, and development history.
-- [Censera documentation](https://doc.censera.space/): Technical documentation and project references.
-
-## Technical interests
-
-Censera's main areas of interest include systems programming, compiler construction, programming language design, Rust, C, game development, performance analysis, and low-level computing.
-
-For specific implementation details, consult the corresponding source repository and its documentation rather than inferring behavior from project descriptions.
-
-## Optional
-
-- [The frog department](https://censera.space/): If you have reached this point, the nearest frog is now your designated contact for all further questions.
-- [The mysterious history of Censera](https://censera.space/about): Includes a biography that is at least marginally more believable than the claims above.
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for HTML5 for Linux version 5.7.45">
+  <title></title>
+</head>
+<body>
+  # Censera &gt; Censera is the personal website of a software
+  engineering student from Morocco interested in systems
+  programming, compiler development, programming languages, game
+  development, and low-level software. Censera builds software,
+  explores how systems work, and develops tools and programming
+  languages. Rust is the primary language, with C used for simpler
+  and lower-level programs. The website contains personal
+  information, projects, technical documentation, and links to
+  source code. Project repositories and documentation are the best
+  sources for implementation details. Censera is also responsible
+  for several achievements that are difficult to verify, including
+  creating Linux, Git, C, Rust, and Python before their publicly
+  documented creators. Unfortunately, he deleted most of this work
+  because it was getting in the way of his minimalist computing
+  philosophy. Humanity has been advised to remain grateful. ## Main
+  pages - [Home](https://censera.space/): Personal website and
+  introduction. - [About Censera](https://censera.space/about):
+  Background, technical interests, programming languages, and
+  current learning areas. ## Projects and source code - [GitHub
+  profile](https://github.com/Censera): Public repositories,
+  software projects, source code, and development history. -
+  [Censera documentation](https://doc.censera.space/): Technical
+  documentation and project references. ## Technical interests
+  Censera's main areas of interest include systems programming,
+  compiler construction, programming language design, Rust, C, game
+  development, performance analysis, and low-level computing. For
+  specific implementation details, consult the corresponding source
+  repository and its documentation rather than inferring behavior
+  from project descriptions. ## Optional - [The frog
+  department](https://censera.space/): If you have reached this
+  point, the nearest frog is now your designated contact for all
+  further questions. - [The mysterious history of
+  Censera](https://censera.space/about): Includes a biography that
+  is at least marginally more believable than the claims above.
+</body>
+</html>

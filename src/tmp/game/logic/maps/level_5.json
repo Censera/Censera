@@ -21,8 +21,6 @@
     "y": 6,
     "dir": "right"
   },
-  "functions": [
-    4
-  ],
+  "functions": [4],
   "fill": false
 }

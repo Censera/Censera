@@ -1,9 +1,12 @@
 const CFG = {
   histCap: 3000,
   maxProbe: 500,
+  probeBatch: 8,
+  maxStack: 256,
+  fetchMs: 8000,
+  loaderDelay: 150,
   cellScale: 1.25,
   tMax: 40,
-  tMin: 20,
   histShow: 80,
 };
 const SPEEDS = [0.5, 1, 2, 4, 8, 12, 67];
@@ -20,6 +23,9 @@ const isTile = (c) => !!c && "rgbRGB".includes(c);
 const $ = (id) => document.getElementById(id);
 const icon = (id, cls, style) =>
   `<svg class="ic${cls ? " " + cls : ""}"${style ? ' style="' + style + '"' : ""}><use href="#i-${id}"/></svg>`;
+
+const asArray = (v) => (Array.isArray(v) ? v : []);
+const fail = (e) => console.warn(e);
 
 const store = {
   get(k, d) {
@@ -54,8 +60,16 @@ const S = {
   cells: [],
   slotEls: [],
   curEl: null,
-  solved: new Set(store.get("solved", [])),
-  speedIdx: Math.min(store.get("speed", 1), SPEEDS.length - 1),
+  req: 0,
+  cache: new Map(),
+  loadTimer: 0,
+  solved: new Set(
+    asArray(store.get("solved", [])).map(Number).filter(Number.isFinite),
+  ),
+  speedIdx: (() => {
+    const v = Number(store.get("speed", 1));
+    return Number.isInteger(v) && v >= 0 ? Math.min(v, SPEEDS.length - 1) : 1;
+  })(),
 };
 
 const countStars = (m) =>
@@ -118,14 +132,20 @@ function collect(M) {
   M.stars = countStars(M.map);
 }
 
+function settle(st) {
+  while (st.length) {
+    const top = st[st.length - 1];
+    const fn = S.program[top.f];
+    while (top.i < fn.length && fn[top.i].movement === null) top.i++;
+    if (top.i < fn.length) return;
+    st.pop();
+  }
+}
+
 function step(M) {
   if (M.result !== null) return null;
   const st = M.stack;
-  while (
-    st.length &&
-    st[st.length - 1].i >= S.program[st[st.length - 1].f].length
-  )
-    st.pop();
+  settle(st);
   if (!st.length) {
     M.result = M.stars ? 1 : 0;
     return null;
@@ -150,7 +170,9 @@ function step(M) {
     else if (mv === "right") M.robot.dir = TURN_RIGHT[M.robot.dir];
     else if (FILL[mv]) fillTile(M, mv);
     else if (typeof mv === "number") {
-      st.push({ f: mv, i: 0 });
+      settle(st);
+      if (st.length >= CFG.maxStack) M.result = 3;
+      else st.push({ f: mv, i: 0 });
       info.delay = 0.25;
     }
   } else {
@@ -264,28 +286,85 @@ function stepBack() {
   renderStep();
 }
 
+async function getJSON(url) {
+  const r = await fetch(url, {
+    cache: "no-store",
+    signal: AbortSignal.timeout(CFG.fetchMs),
+  });
+  if (!r.ok) throw new Error(url + " " + r.status);
+  return r.json();
+}
+
+function validLevel(d) {
+  return (
+    !!d &&
+    Array.isArray(d.map) &&
+    d.map.length > 0 &&
+    d.map.every((r) => typeof r === "string") &&
+    !!d.starting_pos &&
+    Number.isInteger(d.starting_pos.x) &&
+    Number.isInteger(d.starting_pos.y) &&
+    Object.hasOwn(ANGLE, d.starting_pos.dir) &&
+    Array.isArray(d.functions) &&
+    d.functions.length > 0 &&
+    d.functions.every((n) => Number.isInteger(n) && n >= 0)
+  );
+}
+
+async function fetchLevel(n) {
+  const d = await getJSON(`./maps/level_${n}.json`);
+  if (!validLevel(d)) throw new Error("invalid level " + n);
+  return d;
+}
+
 async function discoverLevels() {
   try {
-    const r = await fetch("./maps/index.json", { cache: "no-store" });
-    if (r.ok) {
-      const j = await r.json();
-      const ids = (Array.isArray(j) ? j : j.levels || [])
-        .map(Number)
-        .filter(Number.isFinite);
-      if (ids.length) return [...new Set(ids)].sort((a, b) => a - b);
-    }
-  } catch {}
+    const j = await getJSON("./maps/index.json");
+    const ids = (Array.isArray(j) ? j : j.levels || [])
+      .map(Number)
+      .filter(Number.isFinite);
+    if (ids.length) return [...new Set(ids)].sort((a, b) => a - b);
+  } catch (e) {
+    fail(e);
+  }
   const ids = [];
-  for (let n = 1; n <= CFG.maxProbe; n++) {
-    try {
-      const r = await fetch(`./maps/level_${n}.json`, { cache: "no-store" });
-      if (!r.ok) break;
-      ids.push(n);
-    } catch {
-      break;
+  for (let n = 1; n <= CFG.maxProbe; n += CFG.probeBatch) {
+    const batch = Array.from(
+      { length: CFG.probeBatch },
+      (_, k) => n + k,
+    ).filter((id) => id <= CFG.maxProbe);
+    const res = await Promise.all(
+      batch.map((id) =>
+        fetchLevel(id).then(
+          (d) => [id, d],
+          () => null,
+        ),
+      ),
+    );
+    for (const hit of res) {
+      if (!hit) return ids;
+      S.cache.set(hit[0], hit[1]);
+      ids.push(hit[0]);
     }
   }
   return ids;
+}
+
+function loading(on) {
+  const el = $("loader");
+  if (!on) {
+    clearTimeout(S.loadTimer);
+    S.loadTimer = 0;
+    el.hidden = true;
+    $("app").inert = false;
+    return;
+  }
+  $("app").inert = true;
+  if (!S.loadTimer && el.hidden)
+    S.loadTimer = setTimeout(() => {
+      S.loadTimer = 0;
+      el.hidden = false;
+    }, CFG.loaderDelay);
 }
 
 function showScreen(name) {
@@ -295,6 +374,8 @@ function showScreen(name) {
 }
 
 function goLevels() {
+  S.req++;
+  loading(false);
   pause();
   store.set("open", false);
   showScreen("levels");
@@ -336,33 +417,27 @@ function saveProgram() {
 
 async function loadLevel(n) {
   pause();
+  const req = ++S.req;
+  loading(true);
+  let data = null;
+  try {
+    data = S.cache.get(n) || (await fetchLevel(n));
+    S.cache.delete(n);
+  } catch (e) {
+    fail(e);
+  }
+  if (req !== S.req) return;
+  loading(false);
+  if (!data) {
+    goLevels();
+    return;
+  }
   S.level = n;
   store.set("level", n);
   store.set("open", true);
-  showScreen("game");
-  try {
-    const res = await fetch(`./maps/level_${n}.json`, { cache: "no-store" });
-    if (!res.ok) throw new Error(res.status);
-    S.data = await res.json();
-  } catch {
-    S.data = null;
-    S.program = [];
-    S.M = null;
-    S.hist = [];
-    S.log = [];
-    S.cur = null;
-    $("err").textContent = "Couldn't load the levels";
-    $("err").hidden = false;
-    buildMap();
-    renderProgram();
-    renderPalette();
-    renderStep();
-    fitUI();
-    return;
-  }
-  $("err").hidden = true;
-  S.fill = S.data.fill === true;
-  S.program = buildProgram(S.data.functions);
+  S.data = data;
+  S.fill = data.fill === true;
+  S.program = buildProgram(data.functions);
   S.selected = null;
   S.M = newMachine();
   S.hist = [];
@@ -372,17 +447,16 @@ async function loadLevel(n) {
   renderProgram();
   renderPalette();
   renderStep();
-  if (document.fonts) await document.fonts.ready;
+  showScreen("game");
   fitUI();
+  if (document.fonts) document.fonts.ready.then(fitUI);
 }
 
 function renderHeader() {
   const onGame = !$("game").hidden;
   $("topRight").innerHTML = onGame
-    ? `<span>Level: ${S.level}</span><button class="hb" id="lvBtn" aria-label="All levels">${icon("apps")}</button>`
+    ? `<span>Level: ${S.level}</span>`
     : `${icon("trophy")}<span>${S.ids.filter((n) => S.solved.has(n)).length} / ${S.ids.length}</span>`;
-  const b = $("lvBtn");
-  if (b) b.addEventListener("click", goLevels);
 }
 
 function renderLevels() {
@@ -422,23 +496,23 @@ function fitLevels() {
 }
 
 function buildMap() {
-  const m = $('map');
+  const m = $("map");
   S.cells = [];
-  m.classList.remove('ready');
+  m.classList.remove("ready");
 
   if (!S.M) {
-    m.innerHTML = '';
+    m.innerHTML = "";
     S.dims = { rows: 0, cols: 0 };
     return;
   }
 
   const rows = S.M.map.length;
-  const cols = Math.max(...S.M.map.map(r => r.length));
+  const cols = Math.max(...S.M.map.map((r) => r.length));
 
   S.dims = { rows, cols };
 
   m.innerHTML = '<div class="cell"></div>'.repeat(rows * cols);
-  S.cells = [...m.children].map(el => ({ el, sig: null }));
+  S.cells = [...m.children].map((el) => ({ el, sig: null }));
 }
 
 function updateMap() {
@@ -468,29 +542,34 @@ function updateMap() {
 }
 
 function fitMap() {
-  if (!S.M || $('game').hidden) return;
+  if (!S.M || $("game").hidden) return;
 
   const { rows, cols } = S.dims;
-  const wrap = $('mapWrap');
+  const wrap = $("mapWrap");
   const w = wrap.clientWidth;
   const h = wrap.clientHeight;
 
   if (!w || !h || !rows || !cols) return;
 
-  const slot = parseFloat(
-    getComputedStyle(document.documentElement)
-      .getPropertyValue('--t')
-  ) || 38;
+  const slot =
+    parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue("--t"),
+    ) || 38;
 
   const gap = 2;
 
-  const cell = Math.max(1, Math.floor(Math.min(
-    (w - gap * (cols - 1)) / cols,
-    (h - gap * (rows - 1)) / rows,
-    slot * CFG.cellScale
-  )));
+  const cell = Math.max(
+    1,
+    Math.floor(
+      Math.min(
+        (w - gap * (cols - 1)) / cols,
+        (h - gap * (rows - 1)) / rows,
+        slot * CFG.cellScale,
+      ),
+    ),
+  );
 
-  const m = $('map');
+  const m = $("map");
 
   m.style.gap = `${gap}px`;
   m.style.gridTemplateColumns = `repeat(${cols}, ${cell}px)`;
@@ -498,30 +577,20 @@ function fitMap() {
   m.style.width = `${cols * cell + (cols - 1) * gap}px`;
   m.style.height = `${rows * cell + (rows - 1) * gap}px`;
 
-  m.classList.add('ready');
+  m.classList.add("ready");
 }
-function overflowing() {
-  return ['app', 'game', 'side'].some(id => {
-    const e = $(id);
-    return e.scrollHeight > e.clientHeight + 1;
-  });
-}
-
 function fitUI() {
-  if ($('game').hidden) return;
+  if ($("game").hidden) return;
 
   const t = CFG.tMax;
-  const slots = Math.max(6, ...S.program.map(f => f.length));
-  const cap = $('app').clientWidth * 0.55;
+  const slots = Math.max(6, ...S.program.map((f) => f.length));
+  const cap = $("app").clientWidth * 0.55;
 
-  const sideWidth = Math.min(
-    Math.ceil((slots + 1) * t + slots * 4 + 6),
-    cap
-  );
+  const sideWidth = Math.min(Math.ceil((slots + 1) * t + slots * 4 + 6), cap);
 
   const root = document.documentElement;
-  root.style.setProperty('--t', `${t}px`);
-  root.style.setProperty('--sidew', `${sideWidth}px`);
+  root.style.setProperty("--t", `${t}px`);
+  root.style.setProperty("--sidew", `${sideWidth}px`);
 
   fitMap();
 }
@@ -632,6 +701,7 @@ function renderHist() {
     const next = S.ids[S.ids.indexOf(S.level) + 1];
     html += `<span class="res ok">Level solved · ${S.M.steps} steps</span><button class="next" id="nextBtn">${next !== undefined ? "Next level" : "Levels"}</button>`;
   } else if (r === 1) html += '<span class="res bad">Function over</span>';
+  else if (r === 3) html += '<span class="res bad">Too many calls</span>';
   else if (r === 2) html += '<span class="res bad">Out of the map</span>';
   box.innerHTML = html || '<span class="hint">Press play or step</span>';
 }
@@ -728,16 +798,18 @@ $("bSpeed").addEventListener("click", () => {
   renderCtl();
 });
 
+$("back").addEventListener("click", (e) => {
+  if ($("game").hidden) return;
+  e.preventDefault();
+  goLevels();
+});
+
 document.addEventListener("keydown", (e) => {
-  if (
-    e.target !== document.body ||
-    $("game").hidden ||
-    e.ctrlKey ||
-    e.metaKey ||
-    e.altKey
-  )
-    return;
+  if ($("game").hidden || e.ctrlKey || e.metaKey || e.altKey) return;
+  const t = e.target;
+  if (/^(INPUT|SELECT|TEXTAREA)$/.test(t.tagName)) return;
   if (e.key === " ") {
+    if (t !== document.body) return;
     e.preventDefault();
     play();
   } else if (e.key === "ArrowRight") stepForward();
@@ -750,10 +822,17 @@ window.addEventListener("resize", () => {
   fitLevels();
 });
 showScreen("levels");
-discoverLevels().then((ids) => {
-  S.ids = ids;
-  renderLevels();
-  const last = store.get("level", null);
-  if (store.get("open", false) && last !== null && ids.includes(last))
-    loadLevel(last);
-});
+loading(true);
+discoverLevels()
+  .catch((e) => {
+    fail(e);
+    return [];
+  })
+  .then(async (ids) => {
+    S.ids = ids;
+    renderLevels();
+    const last = store.get("level", null);
+    if (store.get("open", false) && last !== null && ids.includes(last))
+      await loadLevel(last);
+  })
+  .finally(() => loading(false));
