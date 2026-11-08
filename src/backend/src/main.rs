@@ -19,8 +19,9 @@ const PAGES: &[&str] = &[
     "/projects",
     "/visitors",
     "/minecraft",
-    // tmp
+    "/tmp",
     "/tmp/game/memory",
+    "/tmp/game/logic",
 ];
 
 fn main() -> Result<(), Box<dyn Error + Send + Sync>> {
