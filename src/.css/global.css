@@ -117,12 +117,9 @@ a {
 
 .warning {
     color: var(--secondary);
-   	font-weight: bold;
+    font-weight: bold;
 }
 
-.warning::before {
-    content: "\3C\3C";
-}
-.warning::after {
-    content: "\3E\3E";
+.warning::selection {
+    background: var(--secondary);
 }
