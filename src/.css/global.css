@@ -116,9 +116,8 @@ a {
 }
 
 .warning {
-    color: var(--bg);
-    background-color: var(--secondary);
-    font-weight: bold;
+    color: var(--secondary);
+   	font-weight: bold;
 }
 
 .warning::before {
