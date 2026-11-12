@@ -11,8 +11,6 @@ visitors.sqlite3*
 *.sqlite-shm
 *.db
 
-server.py
-
 .env
 .env.*
 !.env.example
