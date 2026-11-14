@@ -1,5 +1,5 @@
 :root {
-    --t: 40px;
+    --t: 50px;
     --bg: #fff;
     --card: #fff;
     --hover: #ececec;
@@ -127,14 +127,14 @@ symbol {
     gap: 0.5rem;
 }
 .hb {
-    min-width: 2rem;
-    height: 2rem;
+    min-width: 30px;
+    height: 30px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     gap: 0.4rem;
     padding: 0;
-    border-radius: 6px;
+    border-radius: 16px;
     border: 0;
     background: var(--soft-btn);
     color: var(--blue);
@@ -160,7 +160,8 @@ symbol {
     display: none;
 }
 .hb.alert {
-    padding: 0 0.9rem 0 0.7rem;
+    padding: 0 16px;
+    height: 40px;
     background: var(--green);
     border-bottom: 3px solid var(--green-d);
     color: #fff;
@@ -323,7 +324,7 @@ symbol {
 .next {
     height: var(--t);
     padding: 0 1rem;
-    border-radius: 6px;
+    border-radius: 16px;
     background: var(--green);
     border-bottom: 3px solid var(--green-d);
     color: #fff;

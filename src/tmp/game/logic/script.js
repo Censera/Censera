@@ -1,7 +1,5 @@
 const CFG = {
   histCap: 3000,
-  maxProbe: 500,
-  probeBatch: 8,
   maxStack: 256,
   fetchMs: 8000,
   loaderDelay: 150,
@@ -61,7 +59,6 @@ const S = {
   slotEls: [],
   curEl: null,
   req: 0,
-  cache: new Map(),
   loadTimer: 0,
   solved: new Set(
     asArray(store.get("solved", [])).map(Number).filter(Number.isFinite),
@@ -318,36 +315,13 @@ async function fetchLevel(n) {
 }
 
 async function discoverLevels() {
-  try {
-    const j = await getJSON("./maps/index.json");
-    const ids = (Array.isArray(j) ? j : j.levels || [])
-      .map(Number)
-      .filter(Number.isFinite);
-    if (ids.length) return [...new Set(ids)].sort((a, b) => a - b);
-  } catch (e) {
-    fail(e);
-  }
-  const ids = [];
-  for (let n = 1; n <= CFG.maxProbe; n += CFG.probeBatch) {
-    const batch = Array.from(
-      { length: CFG.probeBatch },
-      (_, k) => n + k,
-    ).filter((id) => id <= CFG.maxProbe);
-    const res = await Promise.all(
-      batch.map((id) =>
-        fetchLevel(id).then(
-          (d) => [id, d],
-          () => null,
-        ),
-      ),
-    );
-    for (const hit of res) {
-      if (!hit) return ids;
-      S.cache.set(hit[0], hit[1]);
-      ids.push(hit[0]);
-    }
-  }
-  return ids;
+  const j = await getJSON("./maps/index.json");
+  const l = j?.levels ?? j;
+  if (Number.isInteger(l) && l > 0)
+    return Array.from({ length: l }, (_, i) => i + 1);
+  return [...new Set(asArray(l).map(Number).filter(Number.isFinite))].sort(
+    (a, b) => a - b,
+  );
 }
 
 function loading(on) {
@@ -421,8 +395,7 @@ async function loadLevel(n) {
   loading(true);
   let data = null;
   try {
-    data = S.cache.get(n) || (await fetchLevel(n));
-    S.cache.delete(n);
+    data = await fetchLevel(n);
   } catch (e) {
     fail(e);
   }
@@ -454,9 +427,11 @@ async function loadLevel(n) {
 
 function renderHeader() {
   const onGame = !$("game").hidden;
+  const done = S.ids.filter((n) => S.solved.has(n)).length;
+  const pct = S.ids.length ? Math.floor((done * 100) / S.ids.length) : 0;
   $("topRight").innerHTML = onGame
     ? `<span>Level: ${S.level}</span>`
-    : `${icon("trophy")}<span>${S.ids.filter((n) => S.solved.has(n)).length} / ${S.ids.length}</span>`;
+    : `${icon("trophy")}<span>${done} / ${pct}%</span>`;
 }
 
 function renderLevels() {
@@ -469,29 +444,6 @@ function renderLevels() {
     .join("");
   $("empty").hidden = S.ids.length > 0;
   renderHeader();
-}
-
-function fitLevels() {
-  const g = $("grid"),
-    n = S.ids.length;
-  if (!n || $("levels").hidden) return;
-  const W = g.clientWidth,
-    H = g.clientHeight,
-    gap = 10;
-  let best = 0,
-    cols = 1;
-  for (let c = 1; c <= n; c++) {
-    const r = Math.ceil(n / c);
-    const s = Math.min((W - gap * (c - 1)) / c, (H - gap * (r - 1)) / r);
-    if (s > best) {
-      best = s;
-      cols = c;
-    }
-  }
-  best = Math.floor(Math.max(18, Math.min(best, 88)));
-  g.style.gridTemplateColumns = `repeat(${cols},${best}px)`;
-  g.style.gridAutoRows = `${best}px`;
-  g.style.fontSize = `${Math.max(10, Math.round(best * 0.38))}px`;
 }
 
 function buildMap() {
@@ -578,6 +530,7 @@ function fitMap() {
 
   m.classList.add("ready");
 }
+
 function fitUI() {
   if ($("game").hidden) return;
 
@@ -816,14 +769,13 @@ document.addEventListener("keydown", (e) => {
   else if (e.key === "Escape") stop();
 });
 
-window.addEventListener("resize", () => {
-  fitUI();
-});
+window.addEventListener("resize", fitUI);
 showScreen("levels");
 loading(true);
 discoverLevels()
   .catch((e) => {
     fail(e);
+    $("empty").textContent = "Could not load levels";
     return [];
   })
   .then(async (ids) => {
