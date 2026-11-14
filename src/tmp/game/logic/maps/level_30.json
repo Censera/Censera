@@ -1,0 +1,23 @@
+{
+  "map": [
+    "xxxxxxxxxxxxxxxxxxxx",
+    "xrgbxxxxxxxbbbbbbbbx",
+    "xrGbxxxxxxxbRRRRRRbx",
+    "xrGbxxxxxxxbRggggRbx",
+    "xrGbxxxxxxxxxxxxxRbx",
+    "xrGbxxxxxxxxxxxxRRbx",
+    "xrGbbbbbxxxxxxxRRbbx",
+    "xrGGGGGbxxxxxxRRbbxx",
+    "xrrrrrGbxxxxxRRbbxxx",
+    "xxxxxrGbxxxxRRbbxxxx",
+    "xxxxxrGbbbbbrbrrrrxx",
+    "xxxxxrrgggggbbbbbbxx",
+    "xxxxxxxxxxxxxxxxxxxx"
+  ],
+  "starting_pos": {
+    "x": 2,
+    "y": 1,
+    "dir": "down"
+  },
+  "functions": [6, 6, 6]
+}

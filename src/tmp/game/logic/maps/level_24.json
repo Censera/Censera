@@ -1,0 +1,17 @@
+{
+  "map": [
+    "xxxxxxx",
+    "xbbbbxx",
+    "xbxxbxx",
+    "xbxbbxx",
+    "xbxxxxx",
+    "xbbbbBx",
+    "xxxxxxx"
+  ],
+  "starting_pos": {
+    "x": 3,
+    "y": 3,
+    "dir": "right"
+  },
+  "functions": [5, 2, 2, 2, 2]
+}

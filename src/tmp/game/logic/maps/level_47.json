@@ -1,0 +1,26 @@
+{
+  "map": [
+    "xxxxxxxxxxxxxxx",
+    "xbbbbbbbbbbbbbx",
+    "xbbbbbbbbbbbbbx",
+    "xbbbbbbbbbbbbbx",
+    "xbbbBbbbbbRbbbx",
+    "xbbbbbbbbbBbbbx",
+    "xbbbGbbbbbRbbbx",
+    "xbbbBbbbbbbbbbx",
+    "xbbbGbbbbbRbbbx",
+    "xbbbbbbbbbbbbbx",
+    "xbbbbbbBbbRbbbx",
+    "xbbbbbbbbbbbbbx",
+    "xbbbbbbbbbbbbbx",
+    "xbbbbbbbbbbbbbx",
+    "xxxxxxxxxxxxxxx"
+  ],
+  "starting_pos": {
+    "x": 4,
+    "y": 10,
+    "dir": "right"
+  },
+  "functions": [4],
+  "fill": false
+}
