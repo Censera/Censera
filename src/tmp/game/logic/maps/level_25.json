@@ -1,10 +1,15 @@
 {
-  "map": ["xxxxxxxxxxxxxxxxxx", "xBgrbgrbgrbgrbgrBx", "xxxxxxxxxxxxxxxxxx"],
+  "map": [
+    "xxxxxxxxxxxxx",
+    "xbbbbbbbbRBBx",
+    "xxxxxxxxxBxBx",
+    "xxxxxxxxxBBBx",
+    "xxxxxxxxxxxxx"
+  ],
   "starting_pos": {
-    "x": 8,
+    "x": 1,
     "y": 1,
     "dir": "right"
   },
-  "functions": [5],
-  "fill": true
+  "functions": [5]
 }

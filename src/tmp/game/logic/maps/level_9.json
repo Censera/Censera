@@ -1,26 +1,9 @@
 {
-  "title": "Custom Level",
-  "map": [
-    "xxxxxxxxxxxxxxxxx",
-    "xBgggggggggggggBx",
-    "xgxxxxxxxxxxxxxxx",
-    "xgxBggggBgggBxxxx",
-    "xgxgBggggggggggBx",
-    "xgxgBgggBgrggxxgx",
-    "xgxBggggrgrggxxgx",
-    "xgxxxxxrggggBxxgx",
-    "xgxBggggrxxxxxxgx",
-    "xgxggrgBxxxxxxxgx",
-    "xgxggrgBggggggBgx",
-    "xBggggggggggggBgx",
-    "xxxBgggBgggggggBx",
-    "xxxxxxxxxxxxxxxxx"
-  ],
+  "map": ["xxxxxxxxxxxxxxxxxx", "xrbbbbbbbbBBBBBBBx", "xxxxxxxxxxxxxxxxxx"],
   "starting_pos": {
-    "x": 8,
-    "y": 6,
-    "dir": "right"
+    "x": 9,
+    "y": 1,
+    "dir": "left"
   },
-  "functions": [4],
-  "fill": false
+  "functions": [6]
 }

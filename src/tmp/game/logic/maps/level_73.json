@@ -1,18 +1,23 @@
 {
   "map": [
     "xxxxxxxx",
-    "xbGrbgrx",
-    "xrbgrbgx",
-    "xgrbgrbx",
-    "xbgrbgrx",
-    "xrbgrBGx",
+    "xxxxrbGx",
+    "xxxxgxbx",
+    "xxxxbxrx",
+    "xxxxrxrx",
+    "xxxxGrbx",
+    "xBgRbxxx",
+    "xxrxrxxx",
+    "xxrxbxxx",
+    "xxgxbxxx",
+    "xxbGrxxx",
     "xxxxxxxx"
   ],
   "starting_pos": {
-    "x": 1,
-    "y": 1,
-    "dir": "right"
+    "x": 4,
+    "y": 6,
+    "dir": "up"
   },
-  "functions": [3, 5, 8],
+  "functions": [6, 8, 5],
   "fill": false
 }

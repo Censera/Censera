@@ -1,20 +1,10 @@
 {
-  "map": [
-    "xxxxxxxxxx",
-    "xrRRRRRRBx",
-    "xxxxxxxxRx",
-    "xxxxxxxxRx",
-    "xxxxxxxxRx",
-    "xxxxxxxxRx",
-    "xxxxxxxxRx",
-    "xxxxxxxxRx",
-    "xxxxxxxxRx",
-    "xxxxxxxxxx"
-  ],
+  "map": ["xxxxxxx", "xggggrx", "xxxxxrx", "xxxxxgx", "xxGggrx", "xxxxxxx"],
   "starting_pos": {
     "x": 1,
     "y": 1,
     "dir": "right"
   },
-  "functions": [3]
+  "functions": [5],
+  "fill": false
 }
