@@ -15,7 +15,11 @@
     "xbbbbbbbbbbbbbbbbx",
     "xxxxxxxxxxxxxxxxxx"
   ],
-  "starting_pos": { "x": 1, "y": 12, "dir": "right" },
+  "starting_pos": {
+    "x": 1,
+    "y": 12,
+    "dir": "right"
+  },
   "functions": [5, 10, 5, 2, 2],
   "fill": false
 }

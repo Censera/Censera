@@ -1,9 +1,12 @@
 dist/
 visitors.sqlite3*
 
-/target/
-/src/backend/target/
-/src/tmp/game/logic/editor
+target/
+src/backend/target/
+src/tmp/game/logic/editor
+src/tmp/game/logic/generator.py
+src/tmp/game/logic/swiss.py
+src/tmp/game/logic/fixer.py
 
 *.sqlite
 *.sqlite3

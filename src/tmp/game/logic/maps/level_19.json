@@ -1,25 +1,25 @@
 {
   "map": [
-    "xxxxxxxxxxxxx",
-    "xGrrrrrrxxxxx",
-    "xrxxxxxxxxxxx",
-    "xrxxxxxxxxxxx",
-    "xrxxxxxrrrxxx",
-    "xrxxxxxrxxrxx",
-    "xGrrrBxrxxrxx",
-    "xrxxxxxrxxrxx",
-    "xrxxxxxrrrxxx",
-    "xrxxxxxxxxxxx",
-    "xrxxxxxxxxxxx",
-    "xrxxxxxxxxxxx",
-    "xGrrrrrRxxxxx",
-    "xxxxxxxxxxxxx"
+    "xxxxxxxxxxxxxxxxxx",
+    "xxxBxxxxxxxBxxBxxx",
+    "xBGRGGGGGGGRGGRGBx",
+    "xxxGxxxxxxxxxxGxxx",
+    "xBGRxxRGGGRxxxRGBx",
+    "xxxGxxGxxxGxxxGxxx",
+    "xBGGGGGGGGRxxxGxxx",
+    "xBGGGGGGgGRRxxGxxx",
+    "xxxGxxGxxxGGxxGxxx",
+    "xBGRGGRGGGGRGGRGBx",
+    "xxxGxxGxxxGGxxGxxx",
+    "xBGGGGGGGGRGGGRGBx",
+    "xxxBxxBxxxBBxxBxxx",
+    "xxxxxxxxxxxxxxxxxx"
   ],
   "starting_pos": {
-    "x": 7,
-    "y": 1,
+    "x": 8,
+    "y": 7,
     "dir": "left"
   },
-  "functions": [4, 2],
+  "functions": [5],
   "fill": false
 }

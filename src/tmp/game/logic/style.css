@@ -137,19 +137,41 @@ symbol {
 }
 
 #levels {
+    position: relative;
     display: flex;
     flex-direction: column;
     min-height: 0;
 }
+#levels::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 9rem;
+    background: linear-gradient(to bottom, transparent, var(--bg));
+    pointer-events: none;
+}
 #grid {
+    --lt: 95px;
     flex: 1;
     min-height: 0;
     display: grid;
+    grid-template-columns: repeat(10, var(--lt));
+    grid-auto-rows: var(--lt);
     gap: 10px;
     justify-content: center;
-    align-content: center;
+    align-content: start;
+    padding: 4px 4px 9rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+#grid::-webkit-scrollbar {
+    display: none;
 }
 .lt {
+    font-size: 2rem;
     position: relative;
     display: flex;
     align-items: center;

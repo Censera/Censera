@@ -469,7 +469,6 @@ function renderLevels() {
     .join("");
   $("empty").hidden = S.ids.length > 0;
   renderHeader();
-  fitLevels();
 }
 
 function fitLevels() {
@@ -819,7 +818,6 @@ document.addEventListener("keydown", (e) => {
 
 window.addEventListener("resize", () => {
   fitUI();
-  fitLevels();
 });
 showScreen("levels");
 loading(true);
