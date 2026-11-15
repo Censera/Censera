@@ -4,10 +4,10 @@ on:
   push:
     branches: [main]
     paths:
-      - 'src/**'
-      - 'deploy/**'
-      - 'build.sh'
-      - '.github/workflows/deploy.yml'
+      - "src/**"
+      - "deploy/**"
+      - "build.sh"
+      - ".github/workflows/deploy.yml"
 
 permissions:
   contents: read
@@ -27,7 +27,7 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v5
         with:
-          go-version: 'stable'
+          go-version: "stable"
 
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable

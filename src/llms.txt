@@ -1,12 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta name="generator" content=
-  "HTML Tidy for HTML5 for Linux version 5.7.45">
-  <title></title>
-</head>
-<body>
-  # Censera &gt; Censera is the personal website of a software
+# Censera
+> Censera is the personal website of a software
   engineering student from Morocco interested in systems
   programming, compiler development, programming languages, game
   development, and low-level software. Censera builds software,
@@ -40,5 +33,3 @@
   further questions. - [The mysterious history of
   Censera](https://censera.space/about): Includes a biography that
   is at least marginally more believable than the claims above.
-</body>
-</html>
