@@ -157,3 +157,46 @@ a {
 .warning::selection {
     background: var(--secondary);
 }
+
+@keyframes wiggle-a {
+  0%, 100% { transform: translate(0.4px, -0.3px) rotate(-1.2deg) scale(1.005); }
+  20%      { transform: translate(-0.5px, 0.4px) rotate(1.7deg)  scale(0.995); }
+  45%      { transform: translate(0.3px, 0.5px)  rotate(-0.8deg) scale(1.012); }
+  70%      { transform: translate(-0.4px, -0.4px) rotate(1.1deg) scale(1); }
+}
+
+@keyframes wiggle-b {
+  0%, 100% { transform: translate(-0.3px, 0.4px) rotate(1.4deg)  scale(0.998); }
+  30%      { transform: translate(0.5px, -0.4px) rotate(-1.1deg) scale(1.01); }
+  55%      { transform: translate(-0.4px, -0.3px) rotate(0.9deg) scale(1.003); }
+  80%      { transform: translate(0.3px, 0.5px)  rotate(-1.7deg) scale(0.994); }
+}
+
+.jg {
+  display: inline-block;
+  --dur: 270ms;
+  --delay: -80ms;
+  --origin: 50% 50%;
+  transform-origin: var(--origin);
+}
+
+.jg:hover {
+  animation: wiggle-a var(--dur) linear var(--delay) infinite;
+}
+
+.jg:nth-child(even):hover {
+  animation-name: wiggle-b;
+  --dur: 295ms;
+  --delay: -140ms;
+  --origin: 45% 55%;
+}
+
+.jg:nth-child(3n):hover {
+  --dur: 250ms;
+  --delay: -30ms;
+  --origin: 55% 45%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .jg:hover { animation: none; }
+}
