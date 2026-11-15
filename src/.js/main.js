@@ -1,4 +1,16 @@
 // Hmm... mayn
+const updateFade = () => {
+  const atEnd =
+    window.innerHeight + window.scrollY >=
+    document.documentElement.scrollHeight - 8;
+  document.body.classList.toggle("at-end", atEnd);
+};
+
+addEventListener("scroll", updateFade, { passive: true });
+addEventListener("resize", updateFade);
+addEventListener("load", updateFade);
+updateFade();
+
 const me = "Censera";
 const al = "Ashraf";
 const ce = document.getElementById("ce");
