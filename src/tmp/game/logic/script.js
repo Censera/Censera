@@ -651,11 +651,11 @@ function renderHist() {
   const r = S.M ? S.M.result : null;
   if (r === 0) {
     const next = S.ids[S.ids.indexOf(S.level) + 1];
-    html += `<span class="res ok">Level solved · ${S.M.steps} steps</span><button class="next" id="nextBtn">${next !== undefined ? "Next level" : "Levels"}</button>`;
-  } else if (r === 1) html += '<span class="res bad">Function over</span>';
+    html += `<span class="res ok">In ${S.M.steps} steps</span><button class="next" id="nextBtn">${next !== undefined ? "Next level" : "Levels"}</button>`;
+  } else if (r === 1) html += '<span class="res bad">Function is over</span>';
   else if (r === 3) html += '<span class="res bad">Too many calls</span>';
-  else if (r === 2) html += '<span class="res bad">Out of the map</span>';
-  box.innerHTML = html || '<span class="hint">Press play or step</span>';
+  else if (r === 2) html += '<span class="res bad">Out of this world</span>';
+  box.innerHTML = html || '<span class="hint">Press play?</span>';
 }
 
 function renderCtl() {
