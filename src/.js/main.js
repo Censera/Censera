@@ -1,8 +1,10 @@
 // Hmm... mayn
 const updateFade = () => {
+  const atStart = 0;
   const atEnd =
     window.innerHeight + window.scrollY >=
     document.documentElement.scrollHeight - 8;
+  document.body.classList.toggle("at-start", atStart);
   document.body.classList.toggle("at-end", atEnd);
 };
 
