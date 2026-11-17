@@ -431,7 +431,7 @@ function renderHeader() {
   const pct = S.ids.length ? Math.floor((done * 100) / S.ids.length) : 0;
   $("topRight").innerHTML = onGame
     ? `<span>Level: ${S.level}</span>`
-    : `${icon("trophy")}<span>${done} / ${pct}%</span>`;
+    : `${icon("trophy")}<span>${pct}%</span>`;
 }
 
 function renderLevels() {

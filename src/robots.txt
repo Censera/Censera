@@ -1,3 +1,5 @@
 User-agent: *
+
 Allow: /
+
 Sitemap: https://censera.space/sitemap.xml
