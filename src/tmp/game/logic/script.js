@@ -309,13 +309,13 @@ function validLevel(d) {
 }
 
 async function fetchLevel(n) {
-  const d = await getJSON(`./maps/level_${n}.json`);
+  const d = await getJSON(`./.map/level_${n}.json`);
   if (!validLevel(d)) throw new Error("invalid level " + n);
   return d;
 }
 
 async function discoverLevels() {
-  const j = await getJSON("./maps/index.json");
+  const j = await getJSON("./.map/index.json");
   const l = j?.levels ?? j;
   if (Number.isInteger(l) && l > 0)
     return Array.from({ length: l }, (_, i) => i + 1);
