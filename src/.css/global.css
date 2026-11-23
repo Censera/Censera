@@ -162,6 +162,7 @@ a {
 
 .warning {
   color: var(--secondary);
+  cursor: url("/.img/cursor/non.png"), not-allowed;
   font-weight: bold;
 }
 
