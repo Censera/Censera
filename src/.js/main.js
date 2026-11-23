@@ -1,17 +1,14 @@
 // Hmm... mayn
-const updateFade = () => {
-  const atStart = 0;
+const fade = () => {
   const atEnd =
     window.innerHeight + window.scrollY >=
     document.documentElement.scrollHeight - 8;
-  document.body.classList.toggle("at-start", atStart);
   document.body.classList.toggle("at-end", atEnd);
 };
 
-addEventListener("scroll", updateFade, { passive: true });
-addEventListener("resize", updateFade);
-addEventListener("load", updateFade);
-updateFade();
+addEventListener("scroll", fade, { passive: true });
+addEventListener("resize", fade);
+addEventListener("load", fade);
 
 const me = "Censera";
 const al = "Ashraf";
@@ -39,7 +36,7 @@ if (em) {
   em.href = `mailto:${me}@${dm}`;
 }
 
-function recordVisit() {
+function record() {
   return fetch("/api/visit", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -56,8 +53,8 @@ function recordVisit() {
   });
 }
 
-recordVisit().catch((error) => {
-  console.warn("Vistor:", error);
+record().catch((error) => {
+  console.warn("record:", error);
 });
 
 console.error("What are you doing here? >:[");
