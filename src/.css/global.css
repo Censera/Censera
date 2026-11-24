@@ -151,7 +151,7 @@ a {
 
 #link .pages,
 #link .contacts {
-  padding: 0 0.75rem;
+  padding: 0 2rem;
 }
 
 #ce {
@@ -256,7 +256,6 @@ a {
 
 @media (max-width: 600px) {
   main {
-    padding: 1.25rem;
     max-width: 100%;
   }
 }
