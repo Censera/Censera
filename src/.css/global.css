@@ -145,9 +145,6 @@ a {
   justify-content: center;
   text-align: center;
 }
-#link a {
-  margin-left: 1ch;
-}
 
 #link .pages,
 #link .contacts {
