@@ -1,13 +1,13 @@
 @font-face {
   font-family: "Lilex";
-  src: url("/fonts/Lilex[wght].woff2") format("woff2");
+  src: url("/.font/Lilex[wght].ttf") format("ttf");
   font-weight: 100 700;
   font-style: normal;
 }
 
 @font-face {
   font-family: "Lilex";
-  src: url("/fonts/Lilex-Italic[wght].woff2") format("woff2");
+  src: url("/.font/Lilex-Italic[wght].ttf") format("ttf");
   font-weight: 100 700;
   font-style: italic;
 }
