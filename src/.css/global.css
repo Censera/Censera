@@ -1,9 +1,15 @@
 @font-face {
   font-family: "Lilex";
-  src: url("/.font/Lilex.woff2") format("woff2");
-  font-weight: 400;
+  src: url("/fonts/Lilex[wght].woff2") format("woff2");
+  font-weight: 100 700;
   font-style: normal;
-  font-display: swap;
+}
+
+@font-face {
+  font-family: "Lilex";
+  src: url("/fonts/Lilex-Italic[wght].woff2") format("woff2");
+  font-weight: 100 700;
+  font-style: italic;
 }
 
 :root {
@@ -13,6 +19,11 @@
   --secondary: oklch(62.38% 0.12171 27.99);
   --scroll: var(--accent);
   /* --dbg: oklch(31.771% 0.00802 43.178);     /* unused */
+
+  font-variant-ligatures: common-ligatures contextual;
+  font-variant-numeric: oldstyle-nums proportional-nums;
+  font-variant-caps: normal;
+  font-feature-settings: "zero" 1;
 }
 
 * {
@@ -57,10 +68,17 @@ a,
   font-weight: bold;
 }
 
+.languages {
+  width: .9em;
+  height: .9em;
+  margin-right: -.3em ;
+  color: var(--accent);
+  vertical-align: -0.125em;
+}
+
 ::selection {
   color: var(--bg);
   background: var(--accent);
-  font-weight: bold;
 }
 
 html {
@@ -109,8 +127,6 @@ body {
   font-family: "Lilex", monospace;
   font-size: 1rem;
   line-height: 1.6;
-  font-variant-ligatures: contextual common-ligatures;
-  font-feature-settings: "calt" 1;
 }
 
 a,
