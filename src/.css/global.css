@@ -87,8 +87,8 @@ html.loading::before {
 }
 
 .enter {
-  opacity: 1;
-  transform: none;
+  opacity: 0;
+  transform: translateY(8px);
   animation: none;
 }
 
@@ -292,7 +292,9 @@ main {
   }
 
   html.loaded .enter {
-    animation: none;
+      animation: none;
+      opacity: 1;
+      transform: none;
   }
 
   .jg:hover {
