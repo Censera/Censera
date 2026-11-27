@@ -54,7 +54,7 @@ body {
   background: var(--accent);
 }
 
-html::after {
+html.loading::after {
   content: "";
   position: fixed;
   inset: 0;
@@ -62,7 +62,7 @@ html::after {
   background: var(--bg);
 }
 
-html::before {
+html.loading::before {
   content: "";
   position: fixed;
   top: 50%;
@@ -78,11 +78,6 @@ html::before {
   border-radius: 50%;
 
   animation: spin 400ms linear infinite;
-}
-
-html.loaded::before,
-html.loaded::after {
-  display: none;
 }
 
 @keyframes spin {

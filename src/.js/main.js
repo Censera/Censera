@@ -1,5 +1,11 @@
 // Hmm... mayn
 
+const root = document.documentElement;
+
+const loaderTimer = setTimeout(() => {
+  root.classList.add("loading");
+}, 150);
+
 const pendingLoads = [];
 
 window.waitForPageLoad = (promise) => {
@@ -12,7 +18,9 @@ async function finishLoading() {
     ...pendingLoads,
   ]);
 
-  document.documentElement.classList.add("loaded");
+  clearTimeout(loaderTimer);
+  root.classList.remove("loading");
+  root.classList.add("loaded");
 }
 
 if (document.readyState === "complete") {
