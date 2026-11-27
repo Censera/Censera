@@ -4,7 +4,7 @@ const u = document.getElementById("u");
 const t = document.getElementById("t");
 
 if (u && t) {
-  fetch("/api/visitors", { cache: "no-store" })
+  const request = fetch("/api/visitors", { cache: "no-store" })
     .then((response) => {
       if (!response.ok) {
         throw new Error(`HTTP ${response.status}`);
@@ -21,4 +21,6 @@ if (u && t) {
       u.textContent = "-1";
       t.textContent = "-1";
     });
+
+  window.waitForPageLoad(request);
 }

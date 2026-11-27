@@ -1,4 +1,26 @@
 // Hmm... mayn
+
+const pendingLoads = [];
+
+window.waitForPageLoad = (promise) => {
+  pendingLoads.push(Promise.resolve(promise));
+};
+
+async function finishLoading() {
+  await Promise.allSettled([
+    document.fonts.ready,
+    ...pendingLoads,
+  ]);
+
+  document.documentElement.classList.add("loaded");
+}
+
+if (document.readyState === "complete") {
+  finishLoading();
+} else {
+  window.addEventListener("load", finishLoading, { once: true });
+}
+
 const fade = () => {
   const atStart = window.scrollY <= 8;
   const atEnd =

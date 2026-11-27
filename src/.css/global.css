@@ -12,13 +12,13 @@
   font-style: italic;
 }
 
+
 :root {
   --bg: oklch(25.1% 0.0049 39.394);
   --fg: oklch(90% 0.0291 91.657);
   --accent: oklch(70.4% 0.0898 55.952);
   --secondary: oklch(62.38% 0.12171 27.99);
   --scroll: var(--accent);
-  /* --dbg: oklch(31.771% 0.00802 43.178);     /* unused */
 
   font-variant-ligatures: common-ligatures contextual;
   font-variant-numeric: oldstyle-nums proportional-nums;
@@ -28,6 +28,78 @@
 
 * {
   box-sizing: border-box;
+}
+
+html {
+  width: 100%;
+  min-height: 100%;
+  margin: 0;
+
+  scrollbar-width: none;
+  cursor: url("/.img/cursor/default.png"), auto;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+
+  font-family: "Lilex", monospace;
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+::selection {
+  color: var(--bg);
+  background: var(--accent);
+}
+
+html::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  background: var(--bg);
+}
+
+html::before {
+  content: "";
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 9999;
+
+  width: 1rem;
+  height: 1rem;
+  margin: -0.5rem;
+
+  border: 3px solid oklch(from var(--accent) l c h / 20%);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+
+  animation: spin 400ms linear infinite;
+}
+
+html.loaded::before,
+html.loaded::after {
+  display: none;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.enter {
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
+
+html.loaded .enter {
+  animation: enter 700ms ease-out both;
+  animation-delay: calc(var(--i, 0) * 60ms);
 }
 
 @keyframes enter {
@@ -41,16 +113,40 @@
   }
 }
 
-.enter {
-  animation: enter 700ms ease-out both;
-  animation-delay: calc(var(--i, 0) * 60ms);
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 1;
+
+  height: 5rem;
+  background: linear-gradient(to bottom, var(--bg), transparent);
+  opacity: 0;
+
+  pointer-events: none;
+  transition: opacity 300ms ease;
 }
 
-html {
-  scrollbar-color: var(--scroll) var(--bg);
-  scrollbar-width: thin;
+body::after {
+  content: "";
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
 
-  cursor: url("/.img/cursor/default.png"), auto;
+  height: 5rem;
+  background: linear-gradient(to bottom, transparent, var(--bg));
+
+  pointer-events: none;
+  transition: opacity 300ms ease;
+}
+
+body:not(.at-start)::before {
+  opacity: 1;
+}
+
+body.at-end::after {
+  opacity: 0;
 }
 
 li::marker {
@@ -66,88 +162,6 @@ a,
 #u {
   color: var(--accent);
   font-weight: bold;
-}
-
-.languages {
-  width: .9em;
-  height: .9em;
-  margin-right: -.3em ;
-  color: var(--accent);
-  vertical-align: -0.125em;
-}
-
-::selection {
-  color: var(--bg);
-  background: var(--accent);
-}
-
-html {
-  width: 100%;
-  min-height: 100%;
-  margin: 0;
-}
-
-body::after {
-  content: "";
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 5rem;
-  background: linear-gradient(to bottom, transparent, var(--bg));
-  pointer-events: none;
-  transition: opacity 300ms ease;
-}
-
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0 0 auto;
-  height: 5rem;
-  background: linear-gradient(to bottom, var(--bg), transparent);
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 300ms ease;
-  z-index: 1;
-}
-
-body:not(.at-start)::before {
-  opacity: 1;
-}
-
-body.at-end::after {
-  opacity: 0;
-}
-
-body {
-  margin: 0;
-  background: var(--bg);
-  color: var(--fg);
-
-  font-family: "Lilex", monospace;
-  font-size: 1rem;
-  line-height: 1.6;
-}
-
-a,
-button {
-  cursor: url("/.img/cursor/pointer.png"), pointer;
-}
-
-p,
-h1,
-h2,
-h3,
-input,
-textarea {
-  cursor: url("/.img/cursor/text.png"), text;
-}
-
-main {
-  padding: 2rem;
-  max-width: 90vw;
-  width: 720px;
-  margin: 0 auto;
 }
 
 a {
@@ -167,24 +181,27 @@ a {
   padding: 0 2rem;
 }
 
+.languages {
+  width: 0.9em;
+  height: 0.9em;
+  margin-right: -0.3em;
+  color: var(--accent);
+  vertical-align: -0.125em;
+}
+
+a,
+button,
 #ce {
   cursor: url("/.img/cursor/pointer.png"), pointer;
 }
 
-::-webkit-scrollbar {
-  width: 0.5rem;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--bg);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--scroll);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--accent);
+p,
+h1,
+h2,
+h3,
+input,
+textarea {
+  cursor: url("/.img/cursor/text.png"), text;
 }
 
 .warning {
@@ -195,6 +212,40 @@ a {
 
 .warning::selection {
   background: var(--secondary);
+}
+
+main {
+  width: 720px;
+  max-width: 90vw;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.jg {
+  display: inline-block;
+
+  --dur: 270ms;
+  --delay: -80ms;
+  --origin: 50% 50%;
+
+  transform-origin: var(--origin);
+}
+
+.jg:hover {
+  animation: wiggle-a var(--dur) linear var(--delay) infinite;
+}
+
+.jg:nth-child(even):hover {
+  animation-name: wiggle-b;
+  --dur: 295ms;
+  --delay: -140ms;
+  --origin: 45% 55%;
+}
+
+.jg:nth-child(3n):hover {
+  --dur: 250ms;
+  --delay: -30ms;
+  --origin: 55% 45%;
 }
 
 @keyframes wiggle-a {
@@ -229,46 +280,27 @@ a {
   }
 }
 
-.jg {
-  display: inline-block;
-  --dur: 270ms;
-  --delay: -80ms;
-  --origin: 50% 50%;
-  transform-origin: var(--origin);
-}
-
-.jg:hover {
-  animation: wiggle-a var(--dur) linear var(--delay) infinite;
-}
-
-.jg:nth-child(even):hover {
-  animation-name: wiggle-b;
-  --dur: 295ms;
-  --delay: -140ms;
-  --origin: 45% 55%;
-}
-
-.jg:nth-child(3n):hover {
-  --dur: 250ms;
-  --delay: -30ms;
-  --origin: 55% 45%;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body::after,
-  body::before {
-    transition: none;
-  }
-  .enter {
-    animation: none;
-  }
-  .jg:hover {
-    animation: none;
-  }
-}
-
 @media (max-width: 600px) {
   main {
     max-width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before,
+  body::after {
+    transition: none;
+  }
+
+  html::before {
+    animation: none;
+  }
+
+  html.loaded .enter {
+    animation: none;
+  }
+
+  .jg:hover {
+    animation: none;
   }
 }
