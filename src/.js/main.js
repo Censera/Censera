@@ -4,7 +4,7 @@ const root = document.documentElement;
 
 const loaderTimer = setTimeout(() => {
   root.classList.add("loading");
-}, 150);
+}, 350);
 
 const pendingLoads = [];
 
